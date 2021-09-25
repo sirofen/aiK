@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/aiK">
+        <file>res/aiK.jpg</file>
+    </qresource>
+</RCC>
