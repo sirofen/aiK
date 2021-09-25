@@ -15,7 +15,7 @@ public:
     setIconSize(QSize(8, 8));
     setFont(QApplication::font());
     connect(this, &QToolButton::toggled, [=](bool checked) {
-      setArrowType(checked ? Qt::ArrowType::DownArrow : Qt::ArrowType::RightArrow);
+      setArrowType(checked ? Qt::ArrowType::DownArrow : Qt::ArrowType::LeftArrow);
       content_ != nullptr && checked ? showContent() : hideContent();
     });
   }
@@ -27,12 +27,12 @@ public:
   void setContent(QWidget *parent, QWidget *content) {
     assert(content != nullptr || parent != nullptr);
     auto height_diff = content->geometry().height() + 10;
-    m_parent = parent;
-    auto parent_anim = new QPropertyAnimation(m_parent, "size");
-    parent_anim->setStartValue(m_parent->size());
+    m_parent = parent;                                  /* "size" */
+    auto parent_anim = new QPropertyAnimation(m_parent, "maximumHeight");
+    parent_anim->setStartValue(m_parent->height());
     parent_anim->setEasingCurve(QEasingCurve::InOutQuad);
     parent_anim->setDuration(300);
-    parent_anim->setEndValue(QSize(m_parent->size().width(), m_parent->size().height() + height_diff));
+    parent_anim->setEndValue(m_parent->height() + height_diff);
     animator_.addAnimation(parent_anim);
 
     content_ = content;

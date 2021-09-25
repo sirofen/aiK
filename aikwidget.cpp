@@ -16,6 +16,7 @@ aikwidget::aikwidget(QWidget *parent)
     ui->toolButton->setContent(this, ui->consoleFrame);
 
     //QObject::connect(this, ui->playerSpeedMod->returnPressed(), this, ui->playerSpeedMod->returnPressed());
+    //connect()
     connect(ui->playerSpeedMod, &QLineEdit::editingFinished, this, &aikwidget::playerSpeedChanged);
 
     ui->consoleLogLabel->setTextFormat(Qt::MarkdownText);
