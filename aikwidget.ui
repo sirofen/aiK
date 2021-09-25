@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>259</width>
-    <height>489</height>
+    <height>443</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -58,6 +58,9 @@
            <width>0</width>
            <height>0</height>
           </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>&lt;html&gt;&lt;head&gt;
@@ -192,6 +195,15 @@ pre.small {
                <red>0</red>
                <green>0</green>
                <blue>0</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="HighlightedText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>202</red>
+               <green>255</green>
+               <blue>251</blue>
               </color>
              </brush>
             </colorrole>
@@ -341,6 +353,15 @@ pre.small {
               </color>
              </brush>
             </colorrole>
+            <colorrole role="HighlightedText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>202</red>
+               <green>255</green>
+               <blue>251</blue>
+              </color>
+             </brush>
+            </colorrole>
             <colorrole role="AlternateBase">
              <brush brushstyle="SolidPattern">
               <color alpha="127">
@@ -484,6 +505,15 @@ pre.small {
                <red>0</red>
                <green>0</green>
                <blue>0</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="HighlightedText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>202</red>
+               <green>255</green>
+               <blue>251</blue>
               </color>
              </brush>
             </colorrole>
@@ -944,7 +974,7 @@ pre.small {
          </sizepolicy>
         </property>
         <property name="text">
-         <string/>
+         <string>&lt;p style=&quot;text-align: center;background-color:CadetBlue;&quot;&gt;Debug info&lt;/p&gt;</string>
         </property>
         <property name="textFormat">
          <enum>Qt::AutoText</enum>
