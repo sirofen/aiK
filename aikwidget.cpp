@@ -2,6 +2,7 @@
 #include "./ui_aikwidget.h"
 #include <collapse_button.h>
 #include <pipe.hpp>
+#include <QKeyEvent>
 
 aikwidget::aikwidget(QWidget *parent)
     : QWidget(parent, Qt::Window
@@ -15,9 +16,17 @@ aikwidget::aikwidget(QWidget *parent)
     ui->setupUi(this);
     ui->toolButton->setContent(this, ui->consoleFrame);
 
+    ui->playerSpeedMod->installEventFilter(this);
+    ui->playerAttackSpeedMod->installEventFilter(this);
+    ui->targetSpeedMod->installEventFilter(this);
+    ui->targetAttackSpeedMod->installEventFilter(this);
+
     //QObject::connect(this, ui->playerSpeedMod->returnPressed(), this, ui->playerSpeedMod->returnPressed());
     //connect()
-    connect(ui->playerSpeedMod, &QLineEdit::editingFinished, this, &aikwidget::playerSpeedChanged);
+    connect(ui->playerSpeedMod, &QLineEdit::returnPressed, this, &aikwidget::playerSpeedChanged);
+
+
+
 
     ui->consoleLogLabel->setTextFormat(Qt::MarkdownText);
     pipe* _pipe_obj = new pipe(TEXT("\\\\.\\pipe\\Pipe"));
@@ -32,6 +41,18 @@ aikwidget::aikwidget(QWidget *parent)
 aikwidget::~aikwidget()
 {
     delete ui;
+}
+
+bool aikwidget::eventFilter(QObject *object, QEvent *event) {
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *ke = static_cast<QKeyEvent*>(event);
+        if (const auto& key = ke->key(); key == Qt::Key_Escape || key == Qt::Key_Return) {
+            this->setFocus(Qt::OtherFocusReason);
+            return true;
+        }
+
+    }
+    return QObject::eventFilter(object, event);
 }
 
 QString aikwidget::getPlayerSpeed() const {

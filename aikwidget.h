@@ -48,10 +48,14 @@ public slots:
 private:
     Ui::aikwidget *ui;
 
+    QVector<QObject*> objs_to_lose_focus_on;
+
     float playerSpeed;
     float playerAttackSpeed;
 
     float targetSpeed;
     float targetAttackSpeed;
+
+    bool eventFilter(QObject *object, QEvent *event) override;
 };
 #endif // AIKWIDGET_H
