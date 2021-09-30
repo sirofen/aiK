@@ -17,6 +17,16 @@ public slots:
 signals:
     void dispatch_debug_message(QString debug_msg);
 
+    void set_player_speed(float player_speed);
+    void set_player_attack_speed(quint32 player_attack_speed);
+
+    void set_target_speed(float target_speed);
+    void set_target_attack_speed(quint32 target_attack_speed);
+
+    void set_target_axis_x(float target_axis_x);
+    void set_target_axis_y(float target_axis_y);
+    void set_target_axis_z(float target_axis_z);
+
 private:
     void process_dbg_msg(const QString& dbg_msg);
 

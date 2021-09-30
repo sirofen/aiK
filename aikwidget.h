@@ -24,17 +24,17 @@ public:
     QString getPlayerSpeed() const;
 
 public slots:
-    void setPlayerSpeed(const QString& playerSpeed);
-    void setPlayerAttackSpeed(const QString& playerAttackSpeed);
+    void setPlayerSpeed(float playerSpeed);
+    void setPlayerAttackSpeed(quint32 playerAttackSpeed);
 
-    void setTargetSpeed(const QString& targetSpeed);
-    void setTargetAttackSpeed(const QString& targetAttackSpeed);
+    void setTargetSpeed(float targetSpeed);
+    void setTargetAttackSpeed(quint32 targetAttackSpeed);
 
-    void setPlayerSpeed(char* playerSpeed);
+    void _setPlayerSpeed(char* playerSpeed);
     void _setPlayerAttackSpeed(char* playerAttackSpeed);
 
-    void setTargetSpeed(char* targetSpeed);
-    void setTargetAttackSpeed(char* targetAttackSpeed);
+    void _setTargetSpeed(char* targetSpeed);
+    void _setTargetAttackSpeed(char* targetAttackSpeed);
 
     void setDebugString(char* debugString);
     void setDebugQString(const QString& dbg_qstr);

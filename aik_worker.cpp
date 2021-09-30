@@ -21,9 +21,9 @@ aik_worker::aik_worker() {
 }
 
 void aik_worker::start() {
+    DISPATCH_SHARED pshared_structs;
     for (;;QThread::msleep(1000)) {
         //AIK_READ _a;
-        DISPATCH_SHARED pshared_structs;
         //pshared_structs.m_aik_read->dbg_wprint = "3232";
         m_aik.read_shared_values(pshared_structs);
         //qDebug() << pshared_structs.m_aik_read->dbg_wprint;
@@ -31,21 +31,36 @@ void aik_worker::start() {
     }
 }
 
+//namespace  {
+//    QString prev_msg_cache;
+//}
+
 void aik_worker::process_dbg_msg(const QString& dbg_msg) {
     if (dbg_msg.isEmpty() || this->m_debug_message == dbg_msg) {
         return;
     }
+    //prev_msg_cache = dbg_msg;
     /* append to prev string if no newline for versatility */
-    if (dbg_msg.contains(QChar::LineFeed) || dbg_msg.contains(QChar::CarriageReturn)) {
+//    if (dbg_msg.contains(QChar::LineFeed) || dbg_msg.contains(QChar::CarriageReturn)) {
         this->m_debug_message = dbg_msg;
-        emit dispatch_debug_message(this->m_debug_message);
-        return;
-    }
-    this->m_debug_message.append(dbg_msg);
+//        emit dispatch_debug_message(this->m_debug_message);
+//        return;
+//    }
+    //this->m_debug_message.append(dbg_msg);
     emit dispatch_debug_message(this->m_debug_message);
     return;
 }
 
 void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
     this->process_dbg_msg(QString::fromWCharArray(up_aik_read.dbg_wprint));
+
+    emit set_player_speed(up_aik_read.player_speed);
+    emit set_player_attack_speed(up_aik_read.player_attack_speed);
+
+    emit set_target_speed(up_aik_read.target_speed);
+    emit set_target_attack_speed(up_aik_read.target_attack_speed);
+
+    emit set_target_axis_x(up_aik_read.targer_x);
+    emit set_target_axis_y(up_aik_read.target_y);
+    emit set_target_axis_z(up_aik_read.target_z);
 }

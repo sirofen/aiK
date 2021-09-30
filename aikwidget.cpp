@@ -24,6 +24,13 @@ aikwidget::aikwidget(QWidget *parent)
     _aik_worker->moveToThread(aik_worker_thread);
     connect(_aik_worker, &aik_worker::dispatch_debug_message, this, &aikwidget::setDebugQString);
     connect( aik_worker_thread, &QThread::started, _aik_worker, &aik_worker::start);
+
+    connect(_aik_worker, &aik_worker::set_player_speed, this, &aikwidget::setPlayerSpeed);
+    connect(_aik_worker, &aik_worker::set_player_attack_speed, this, &aikwidget::setPlayerAttackSpeed);
+
+    connect(_aik_worker, &aik_worker::set_target_speed, this, &aikwidget::setTargetSpeed);
+    connect(_aik_worker, &aik_worker::set_target_attack_speed, this, &aikwidget::setTargetAttackSpeed);
+
     aik_worker_thread->start();
 
     ui->playerSpeedMod->installEventFilter(this);
@@ -33,10 +40,7 @@ aikwidget::aikwidget(QWidget *parent)
 
     //QObject::connect(this, ui->playerSpeedMod->returnPressed(), this, ui->playerSpeedMod->returnPressed());
     //connect()
-    connect(ui->playerSpeedMod, &QLineEdit::returnPressed, this, &aikwidget::playerSpeedChanged);
-
-
-
+    //connect(ui->playerSpeedMod, &QLineEdit::returnPressed, this, &aikwidget::playerSpeedChanged);
 
     ui->consoleLogLabel->setTextFormat(Qt::MarkdownText);
     pipe* _pipe_obj = new pipe(TEXT("\\\\.\\pipe\\Pipe"));
@@ -72,35 +76,35 @@ void aikwidget::playerSpeedChanged() {
     ui->playerAttackSpeedMod->setText(ui->playerSpeedMod->text());
 }
 
-void aikwidget::setPlayerSpeed(const QString& playerSpeed) {
-     ui->playerSpeedMod->setText(playerSpeed);
+void aikwidget::setPlayerSpeed(float playerSpeed) {
+    ui->playerSpeedMod->setText(QString::number(playerSpeed));
 }
-void aikwidget::setPlayerAttackSpeed(const QString& playerAttackSpeed) {
-    ui->playerAttackSpeedMod->setText(playerAttackSpeed);
-}
-
-void aikwidget::setTargetSpeed(const QString& targetSpeed) {
-    qDebug() << targetSpeed;
-}
-void aikwidget::setTargetAttackSpeed(const QString& targetAttackSpeed) {
-    qDebug() << targetAttackSpeed;
+void aikwidget::setPlayerAttackSpeed(quint32 playerAttackSpeed) {
+    ui->playerAttackSpeedMod->setText(QString::number(playerAttackSpeed));
 }
 
-void aikwidget::setPlayerSpeed(char* playerSpeed) {
+void aikwidget::setTargetSpeed(float targetSpeed) {
+    ui->targetSpeedMod->setText(QString::number(targetSpeed));
+}
+void aikwidget::setTargetAttackSpeed(quint32 targetAttackSpeed) {
+    ui->targetAttackSpeedMod->setText(QString::number(targetAttackSpeed));
+}
+
+void aikwidget::_setPlayerSpeed(char* playerSpeed) {
     auto str = QString(playerSpeed);
-    setPlayerSpeed(str);
+    //setPlayerSpeed(str);
 }
 void aikwidget::_setPlayerAttackSpeed(char* playerAttackSpeed) {
     auto str = QString(playerAttackSpeed);
-    setPlayerAttackSpeed(str);
+    //setPlayerAttackSpeed(str);
 }
-void aikwidget::setTargetSpeed(char* targetSpeed) {
+void aikwidget::_setTargetSpeed(char* targetSpeed) {
     auto str = QString(targetSpeed);
-    setTargetSpeed(str);
+    //setTargetSpeed(str);
 }
-void aikwidget::setTargetAttackSpeed(char* targetAttackSpeed) {
+void aikwidget::_setTargetAttackSpeed(char* targetAttackSpeed) {
     auto str = QString(targetAttackSpeed);
-    setTargetAttackSpeed(str);
+    //setTargetAttackSpeed(str);
 }
 
 void aikwidget::setDebugString(char* debugString) {
