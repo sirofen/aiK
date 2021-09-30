@@ -73,3 +73,4 @@ Thumbs.db
 /cmake-build-release/
 /build/
 /CMakeLists.txt.user
+.idea/

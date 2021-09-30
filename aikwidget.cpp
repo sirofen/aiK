@@ -4,6 +4,8 @@
 #include <pipe.hpp>
 #include <QKeyEvent>
 
+#include <aik_worker.hpp>
+
 aikwidget::aikwidget(QWidget *parent)
     : QWidget(parent, Qt::Window
                     | Qt::MSWindowsFixedSizeDialogHint
@@ -14,7 +16,15 @@ aikwidget::aikwidget(QWidget *parent)
 {
     this->setWindowIcon(AIK_ICON);
     ui->setupUi(this);
+    /* expanding layout */
     ui->toolButton->setContent(this, ui->consoleFrame);
+    /* start aik worker */
+    QThread* aik_worker_thread = new QThread();
+    aik_worker* _aik_worker = new aik_worker();
+    _aik_worker->moveToThread(aik_worker_thread);
+    connect(_aik_worker, &aik_worker::dispatch_debug_message, this, &aikwidget::setDebugQString);
+    connect( aik_worker_thread, &QThread::started, _aik_worker, &aik_worker::start);
+    aik_worker_thread->start();
 
     ui->playerSpeedMod->installEventFilter(this);
     ui->playerAttackSpeedMod->installEventFilter(this);
@@ -50,7 +60,6 @@ bool aikwidget::eventFilter(QObject *object, QEvent *event) {
             this->setFocus(Qt::OtherFocusReason);
             return true;
         }
-
     }
     return QObject::eventFilter(object, event);
 }
@@ -98,5 +107,10 @@ void aikwidget::setDebugString(char* debugString) {
     auto str = QString(debugString);
     qDebug() << str;
     ui->consoleLogLabel->setText(str);
+}
+
+void aikwidget::setDebugQString(const QString& dbg_qstr) {
+    qDebug() << dbg_qstr;
+    ui->consoleLogLabel->setText(dbg_qstr);
 }
 

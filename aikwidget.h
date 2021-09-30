@@ -37,6 +37,7 @@ public slots:
     void setTargetAttackSpeed(char* targetAttackSpeed);
 
     void setDebugString(char* debugString);
+    void setDebugQString(const QString& dbg_qstr);
 
 //signals:
     void playerSpeedChanged();

@@ -25,6 +25,20 @@ set(PROJECT_SOURCES
         aikwidget.ui
         pipe.hpp
         collapse_button.h
+
+        aik/aik.hpp
+        aik/aik.cpp
+        aik/shared_memory.hpp
+        aik/shared_memory.cpp
+        aik/shared_mutex.hpp
+        aik/shared_mutex.cpp
+        aik/global_vars.hpp
+        aik/aik_types.hpp
+        aik/aik_types.cpp
+        aik/err.hpp
+
+        aik_worker.hpp
+        aik_worker.cpp
 )
 
 qt_add_resources(PROJECT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/aiK.qrc)
