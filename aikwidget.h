@@ -21,26 +21,43 @@ class aikwidget : public QWidget
 public:
     aikwidget(QWidget *parent = nullptr);
     ~aikwidget();
-    QString getPlayerSpeed() const;
+    QString get_player_speed() const;
+
+signals:
+    void input_player_speed(const QString& _val);
+    void input_player_attack_speed(const QString& _val);
+
+    void input_target_speed(const QString& _val);
+    void input_target_attack_speed(const QString& _val);
 
 public slots:
-    void setPlayerSpeed(float playerSpeed);
-    void setPlayerAttackSpeed(quint32 playerAttackSpeed);
+    void set_player_speed(float player_speed);
+    void set_player_attack_speed(quint32 player_attack_speed);
 
-    void setTargetSpeed(float targetSpeed);
-    void setTargetAttackSpeed(quint32 targetAttackSpeed);
+    void set_target_speed(float target_speed);
+    void set_target_attack_speed(quint32 target_attack_speed);
 
-    void _setPlayerSpeed(char* playerSpeed);
-    void _setPlayerAttackSpeed(char* playerAttackSpeed);
+    void set_target_x(float target_x);
+    void set_target_y(float target_y);
+    void set_target_z(float target_z);
 
-    void _setTargetSpeed(char* targetSpeed);
-    void _setTargetAttackSpeed(char* targetAttackSpeed);
+    void read_input_player_speed();
+    void read_input_player_attack_speed();
 
-    void setDebugString(char* debugString);
-    void setDebugQString(const QString& dbg_qstr);
+    void read_input_target_speed();
+    void read_input_target_attack_speed();
+
+//    void _setPlayerSpeed(char* playerSpeed);
+//    void _setPlayerAttackSpeed(char* playerAttackSpeed);
+
+//    void _setTargetSpeed(char* targetSpeed);
+//    void _setTargetAttackSpeed(char* targetAttackSpeed);
+
+//    void setDebugString(char* debugString);
+    void set_debug_qstring(const QString& dbg_qstr);
 
 //signals:
-    void playerSpeedChanged();
+    void player_speed_changed();
     //void playerAttackSpeedChanged();
 
     //void targetSpeedChanged();
@@ -51,11 +68,11 @@ private:
 
     QVector<QObject*> objs_to_lose_focus_on;
 
-    float playerSpeed;
-    float playerAttackSpeed;
+    float player_speed;
+    float player_attack_speed;
 
-    float targetSpeed;
-    float targetAttackSpeed;
+    float target_speed;
+    float target_attack_speed;
 
     bool eventFilter(QObject *object, QEvent *event) override;
 };

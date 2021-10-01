@@ -37,8 +37,12 @@ set(PROJECT_SOURCES
         aik/aik_types.cpp
         aik/err.hpp
 
-        aik_worker.hpp
-        aik_worker.cpp
+        aik_control/aik_worker.hpp
+        aik_control/aik_worker.cpp
+        aik_control/aik_process_values.hpp
+        aik_control/aik_process_values.cpp
+        aik_control/aik_write_instructions.hpp
+        aik_control/aik_write_instructions.cpp
 )
 
 qt_add_resources(PROJECT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/aiK.qrc)

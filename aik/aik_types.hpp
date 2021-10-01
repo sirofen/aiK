@@ -19,7 +19,7 @@ struct _AIK_READ {
     float target_speed;
     std::uint32_t target_attack_speed;
 
-    float targer_x;
+    float target_x;
     float target_y;
     float target_z;
 
