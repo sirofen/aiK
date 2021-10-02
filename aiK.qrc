@@ -1,5 +1,10 @@
 <RCC>
     <qresource prefix="/aiK">
         <file>res/aiK.jpg</file>
+		<file>res/buttons/close.png</file>
+		<file>res/buttons/close-gray.png</file>
+		<file>res/buttons/window-minimize.png</file>
+		<file>res/buttons/window-minimize-gray.png</file>
     </qresource>
+	
 </RCC>

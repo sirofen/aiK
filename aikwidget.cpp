@@ -7,22 +7,43 @@
 
 #include <aik_control/aik_worker.hpp>
 
+#include <style/style.hpp>
+
 namespace {
 constexpr auto kInputMask = "1234567890.,*+=";
 }
 
 aikwidget::aikwidget(QWidget *parent)
-    : QWidget(parent, Qt::Window
+    : QWidget(parent,/* Qt::Window
                     | Qt::MSWindowsFixedSizeDialogHint
                     | Qt::CustomizeWindowHint
                     | Qt::WindowTitleHint
-                    | Qt::WindowCloseButtonHint /*| Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint*/)
+                    | Qt::WindowCloseButtonHint *//*| Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint*/
+                    Qt::FramelessWindowHint)
     , ui(new Ui::aikwidget)
 {
     this->setWindowIcon(AIK_ICON);
     ui->setupUi(this);
     /* expanding layout */
     ui->toolButton->setContent(this, ui->consoleFrame);
+    /* elements style */
+    //m_task_bar_rect = ui->labelAik->geometry();
+    //m_task_bar_rect.setWidth(this->width());
+    //qDebug() << m_task_bar_rect;
+    //this->setMouseTracking(true);
+    //this->setWindowFlags(Qt::FramelessWindowHint);
+    //this->setAttribute(Qt::WA_TranslucentBackground);
+    //this->setStyleSheet(StyleHelper::getWindowStyleSheet());
+    //this->installEventFilter(this);
+    //ui->toolBar->installEventFilter(this);
+    qDebug() << this->styleSheet();
+
+    //ui->labelAik->setStyleSheet(StyleHelper::getLabelStyleSheet());
+    ui->minimize_button->setStyleSheet(StyleHelper::getMinimizeStyleSheet());
+    ui->close_button->setStyleSheet(StyleHelper::getCloseStyleSheet());
+
+    connect(ui->minimize_button, &QToolButton::clicked, this, &QWidget::showMinimized);
+    connect(ui->close_button, &QToolButton::clicked, this, &QWidget::close);
     /* start aik worker */
     QThread* aik_worker_thread = new QThread();
     aik_worker* _aik_worker = new aik_worker();
@@ -69,15 +90,32 @@ aikwidget::~aikwidget()
     delete ui;
 }
 
-bool aikwidget::eventFilter(QObject *object, QEvent *event) {
-    if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *ke = static_cast<QKeyEvent*>(event);
-        if (const auto& key = ke->key(); key == Qt::Key_Escape || key == Qt::Key_Return) {
-            this->setFocus(Qt::OtherFocusReason);
-            return true;
-        }
+void aikwidget::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        m_lmb_pressed = true;
+        m_mouse_prev_pos = event->pos();
     }
-    return QObject::eventFilter(object, event);
+    return QWidget::mousePressEvent(event);
+}
+
+void aikwidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        m_lmb_pressed = false;
+    }
+    return QWidget::mouseReleaseEvent(event);
+}
+
+void aikwidget::mouseMoveEvent(QMouseEvent *event)
+{
+    //qDebug() << event;
+    if (m_lmb_pressed) {
+        auto dx = event->position().x() - m_mouse_prev_pos.x();
+        auto dy = event->position().y() - m_mouse_prev_pos.y();
+        move(x() + dx,y() + dy);
+    }
+    return QWidget::mouseMoveEvent(event);
 }
 
 QString aikwidget::get_player_speed() const {

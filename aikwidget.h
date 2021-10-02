@@ -21,9 +21,12 @@ class aikwidget : public QWidget
 public:
     aikwidget(QWidget *parent = nullptr);
     ~aikwidget();
+
     QString get_player_speed() const;
 
 signals:
+    //void previousPositionChanged(QPoint previousPosition);
+
     void input_player_speed(const QString& _val);
     void input_player_attack_speed(const QString& _val);
 
@@ -62,9 +65,17 @@ public slots:
 
     //void targetSpeedChanged();
     //void targetAttackSpeedChanged();
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 private:
     Ui::aikwidget *ui;
+
+    //QRect m_task_bar_rect;
+    bool m_lmb_pressed = false;
+    QPoint m_mouse_prev_pos;
 
     QVector<QObject*> objs_to_lose_focus_on;
 
@@ -74,6 +85,6 @@ private:
     float target_speed;
     float target_attack_speed;
 
-    bool eventFilter(QObject *object, QEvent *event) override;
+    //bool eventFilter(QObject *object, QEvent *event) override;
 };
 #endif // AIKWIDGET_H

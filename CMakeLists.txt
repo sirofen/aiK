@@ -26,6 +26,9 @@ set(PROJECT_SOURCES
         pipe.hpp
         collapse_button.h
 
+        style/style.hpp
+        style/style.cpp
+
         aik/aik.hpp
         aik/aik.cpp
         aik/shared_memory.hpp
