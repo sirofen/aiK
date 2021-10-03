@@ -28,7 +28,7 @@ signals:
     void set_target_z(float target_z);
 
 private:
-    void process_dbg_msg(const QString& dbg_msg);
+    void process_shared_mem_dbg_msg(const QString& dbg_msg);
 
     void process_read_values(const AIK_READ& up_aik_read);
 

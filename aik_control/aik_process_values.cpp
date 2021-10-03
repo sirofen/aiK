@@ -24,24 +24,25 @@ void aik_process_values::process_player_speed_qstring(const QString& _operation)
     auto _write_inst = aik_write_instructions(_operation.toStdString());
     m_player_speed_operation = _write_inst;
     if (auto _qstr_oper = _write_inst.operation_qstring(); !_qstr_oper.isEmpty()) {
+        emit debug_qstr("Player speed operation: " + _qstr_oper);
         emit player_speed_write_operation(_qstr_oper);
         return;
     }
-    emit player_attack_speed_write_operation("");
-    emit debug_qstr(__FUNCTION__ " " + _operation + " not an operation");
+    emit player_speed_write_operation("");
+    emit debug_qstr("Player speed " + _operation + " not an operation");
     //int32_t _val = 11;
     //qDebug() << m_player_speed_operation->apply<int32_t>(_val);
 }
 void aik_process_values::process_player_attack_speed_qstring(const QString& _operation) {
-    qDebug() << _operation;
     auto _write_inst = aik_write_instructions(_operation.toStdString());
     m_player_attack_speed_operation = _write_inst;
     if (auto _qstr_oper = _write_inst.operation_qstring(); !_qstr_oper.isEmpty()) {
+        emit debug_qstr("Player attack speed operation: " + _qstr_oper);
         emit player_attack_speed_write_operation(_qstr_oper);
         return;
     }
     emit player_attack_speed_write_operation("");
-    emit debug_qstr(__FUNCTION__" Not an operation " + _operation);
+    emit debug_qstr("Player attack speed " + _operation + " not an operation");
 }
 
 void aik_process_values::process_target_speed_qstring(const QString& _operation) {

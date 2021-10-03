@@ -24,6 +24,8 @@ aikwidget::aikwidget(QWidget *parent)
 {
     this->setWindowIcon(AIK_ICON);
     ui->setupUi(this);
+
+    connect(this, &aikwidget::_dbg_qstr, ui->consolePlainText, &LogView::append_message);
     /* expanding layout */
     ui->toolButton->setContent(this, ui->consoleFrame, ui->consolePlainText);
     /* elements style */
@@ -135,7 +137,9 @@ void aikwidget::set_player_speed(float player_speed) {
     }
 }
 void aikwidget::set_player_attack_speed(quint32 player_attack_speed) {
-    ui->playerAttackSpeedMod->setText(QString::number(player_attack_speed));
+    if (QWidget::focusWidget() != ui->playerAttackSpeedMod) {
+        ui->playerAttackSpeedMod->setText(QString::number(player_attack_speed));
+    }
 }
 
 void aikwidget::set_target_speed(float target_speed) {
@@ -168,7 +172,8 @@ void aikwidget::read_input_target_attack_speed() {
 }
 
 void aikwidget::set_debug_qstring(const QString& dbg_qstr) {
-    qDebug() << dbg_qstr;
+    //qDebug() << dbg_qstr;
+    emit _dbg_qstr(dbg_qstr);
     //ui->consoleLogLabel->setText(dbg_qstr);
 }
 

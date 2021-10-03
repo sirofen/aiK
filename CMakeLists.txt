@@ -29,6 +29,9 @@ set(PROJECT_SOURCES
         style/style.hpp
         style/style.cpp
 
+        logview.hpp
+        logview.cpp
+
         aik/aik.hpp
         aik/aik.cpp
         aik/shared_memory.hpp

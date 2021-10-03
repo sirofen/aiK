@@ -29,6 +29,8 @@ signals:
     void input_target_speed(const QString& _val);
     void input_target_attack_speed(const QString& _val);
 
+    void _dbg_qstr(const QString& dbg_qstr);
+
 public slots:
     void set_player_speed(float player_speed);
     void set_player_attack_speed(quint32 player_attack_speed);

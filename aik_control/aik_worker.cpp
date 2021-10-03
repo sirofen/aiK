@@ -26,7 +26,7 @@ void aik_worker::start() {
         //AIK_READ _a;
         //pshared_structs.m_aik_read->dbg_wprint = "3232";
         m_aik.read_shared_values(pshared_structs);
-        //qDebug() << pshared_structs.m_aik_read->dbg_wprint;
+        qDebug() << pshared_structs.m_aik_read->player_speed;
         this->process_read_values(*pshared_structs.m_aik_read);
     }
 }
@@ -35,7 +35,7 @@ void aik_worker::start() {
 //    QString prev_msg_cache;
 //}
 
-void aik_worker::process_dbg_msg(const QString& dbg_msg) {
+void aik_worker::process_shared_mem_dbg_msg(const QString& dbg_msg) {
     if (dbg_msg.isEmpty() || this->m_debug_message == dbg_msg) {
         return;
     }
@@ -64,33 +64,40 @@ float prev_target_z = {};
 }
 
 void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
-    this->process_dbg_msg(QString::fromWCharArray(up_aik_read.dbg_wprint));
+    this->process_shared_mem_dbg_msg(QString::fromWCharArray(up_aik_read.dbg_wprint));
     if (prev_player_speed != up_aik_read.player_speed) {
         prev_player_speed = up_aik_read.player_speed;
         emit set_player_speed(up_aik_read.player_speed);
+        emit dispatch_debug_message("Received Player Speed: " + QString::number(up_aik_read.player_speed));
     }
     if (prev_player_attack_speed != up_aik_read.player_attack_speed) {
         prev_player_attack_speed = up_aik_read.player_attack_speed;
         emit set_player_attack_speed(up_aik_read.player_attack_speed);
+        emit dispatch_debug_message("Received Player Attack Speed: " + QString::number(up_aik_read.player_attack_speed));
     }
     if (prev_target_speed != up_aik_read.target_speed) {
         prev_target_speed = up_aik_read.target_speed;
         emit set_target_speed(up_aik_read.target_speed);
+        emit dispatch_debug_message("Received Target Speed: " + QString::number(up_aik_read.target_speed));
     }
     if (prev_target_attack_speed != up_aik_read.target_attack_speed) {
         prev_target_attack_speed = up_aik_read.target_attack_speed;
         emit set_target_attack_speed(up_aik_read.target_attack_speed);
+        emit dispatch_debug_message("Received Target Attack Speed: " + QString::number(up_aik_read.target_attack_speed));
     }
     if (prev_target_x != up_aik_read.target_x) {
         prev_target_x = up_aik_read.target_x;
         emit set_target_x(up_aik_read.target_x);
+        emit dispatch_debug_message("Received Target X: " + QString::number(up_aik_read.target_x));
     }
     if (prev_target_y != up_aik_read.target_y) {
         prev_target_y = up_aik_read.target_y;
         emit set_target_y(up_aik_read.target_y);
+        emit dispatch_debug_message("Received Target Y: " + QString::number(up_aik_read.target_y));
     }
     if (prev_target_z != up_aik_read.target_z) {
         prev_target_z = up_aik_read.target_z;
         emit set_target_z(up_aik_read.target_z);
+        emit dispatch_debug_message("Received Target Z: " + QString::number(up_aik_read.target_z));
     }
 }
