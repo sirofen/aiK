@@ -25,7 +25,7 @@ aikwidget::aikwidget(QWidget *parent)
     this->setWindowIcon(AIK_ICON);
     ui->setupUi(this);
     /* expanding layout */
-    ui->toolButton->setContent(this, ui->consoleFrame);
+    ui->toolButton->setContent(this, ui->consoleFrame, ui->consolePlainText);
     /* elements style */
     //m_task_bar_rect = ui->labelAik->geometry();
     //m_task_bar_rect.setWidth(this->width());
@@ -36,7 +36,6 @@ aikwidget::aikwidget(QWidget *parent)
     //this->setStyleSheet(StyleHelper::getWindowStyleSheet());
     //this->installEventFilter(this);
     //ui->toolBar->installEventFilter(this);
-    qDebug() << this->styleSheet();
 
     //ui->labelAik->setStyleSheet(StyleHelper::getLabelStyleSheet());
     ui->minimize_button->setStyleSheet(StyleHelper::getMinimizeStyleSheet());
@@ -71,6 +70,14 @@ aikwidget::aikwidget(QWidget *parent)
     /* qline process entered values */
     connect(this, &aikwidget::input_player_speed, aik_proc_val, &aik_process_values::process_player_speed_qstring);
     connect(ui->playerSpeedMod, SIGNAL(editingFinished()), this, SLOT(read_input_player_speed()));
+
+    connect(this, &aikwidget::input_player_attack_speed, aik_proc_val, &aik_process_values::process_player_attack_speed_qstring);
+    connect(ui->playerAttackSpeedMod, SIGNAL(editingFinished()), this, SLOT(read_input_player_attack_speed()));
+    // display operations
+    connect(aik_proc_val, &aik_process_values::player_speed_write_operation, ui->playerSpeedFunLabel, &QLabel::setText);
+    connect(aik_proc_val, &aik_process_values::player_attack_speed_write_operation, ui->playerAttackSpeedFunLabel, &QLabel::setText);
+    // connect debug msg from aik_process_values
+    connect(aik_proc_val, &aik_process_values::debug_qstr, this, &aikwidget::set_debug_qstring);
     //QObject::connect(this, ui->playerSpeedMod->returnPressed(), this, ui->playerSpeedMod->returnPressed());
     //connect()
     //connect(ui->playerSpeedMod, &QLineEdit::returnPressed, this, &aikwidget::playerSpeedChanged);
@@ -122,10 +129,6 @@ QString aikwidget::get_player_speed() const {
     return QString::number(player_speed);
 }
 
-void aikwidget::player_speed_changed() {
-    //ui->playerAttackSpeedMod->setText(ui->playerSpeedMod->text());
-}
-
 void aikwidget::set_player_speed(float player_speed) {
     if (QWidget::focusWidget() != ui->playerSpeedMod) {
          ui->playerSpeedMod->setText(QString::number(player_speed));
@@ -164,31 +167,8 @@ void aikwidget::read_input_target_attack_speed() {
     emit input_target_attack_speed(ui->targetAttackSpeedMod->text());
 }
 
-//void aikwidget::_setPlayerSpeed(char* playerSpeed) {
-//    auto str = QString(playerSpeed);
-//    //setPlayerSpeed(str);
-//}
-//void aikwidget::_setPlayerAttackSpeed(char* playerAttackSpeed) {
-//    auto str = QString(playerAttackSpeed);
-//    //setPlayerAttackSpeed(str);
-//}
-//void aikwidget::_setTargetSpeed(char* targetSpeed) {
-//    auto str = QString(targetSpeed);
-//    //setTargetSpeed(str);
-//}
-//void aikwidget::_setTargetAttackSpeed(char* targetAttackSpeed) {
-//    auto str = QString(targetAttackSpeed);
-//    //setTargetAttackSpeed(str);
-//}
-
-//void aikwidget::setDebugString(char* debugString) {
-//    auto str = QString(debugString);
-//    qDebug() << str;
-//    ui->consoleLogLabel->setText(str);
-//}
-
 void aikwidget::set_debug_qstring(const QString& dbg_qstr) {
     qDebug() << dbg_qstr;
-    ui->consoleLogLabel->setText(dbg_qstr);
+    //ui->consoleLogLabel->setText(dbg_qstr);
 }
 

@@ -14,7 +14,10 @@ public slots:
 
     void process_target_speed_qstring(const QString& _operation);
     void process_target_attack_speed_qstring(const QString& _operation);
-
+signals:
+    void player_speed_write_operation(const QString& _op_str);
+    void player_attack_speed_write_operation(const QString& _op_str);
+    void debug_qstr(const QString& _msg);
 protected:
     bool eventFilter(QObject* object, QEvent* event) override;
 private:

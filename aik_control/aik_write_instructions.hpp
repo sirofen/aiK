@@ -82,6 +82,8 @@ public:
         return {};
     }
 
+    QString operation_qstring();
+
 private:
     AIK_INSTRUCTIONS m_operator;
     operand m_operand;
