@@ -1,5 +1,4 @@
-#ifndef AIKWIDGET_H
-#define AIKWIDGET_H
+#pragma once
 
 #include <QWidget>
 #include <QString>
@@ -69,4 +68,3 @@ private:
     float target_speed;
     float target_attack_speed;
 };
-#endif // AIKWIDGET_H

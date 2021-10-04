@@ -8,6 +8,10 @@ class aik_process_values : public QWidget {
     Q_OBJECT
 public:
     explicit aik_process_values(QWidget* parent, std::string mask);
+
+    std::optional<aik_write_instructions> get_player_speed_operation();
+    std::optional<aik_write_instructions> get_player_attack_speed_operation();
+
 public slots:
     void process_player_speed_qstring(const QString& _operation);
     void process_player_attack_speed_qstring(const QString& _operation);

@@ -29,46 +29,19 @@ aikwidget::aikwidget(QWidget *parent)
     /* expanding layout */
     ui->toolButton->setContent(this, ui->consoleFrame, ui->consolePlainText);
     /* elements style */
-    //m_task_bar_rect = ui->labelAik->geometry();
-    //m_task_bar_rect.setWidth(this->width());
-    //qDebug() << m_task_bar_rect;
-    //this->setMouseTracking(true);
-    //this->setWindowFlags(Qt::FramelessWindowHint);
-    //this->setAttribute(Qt::WA_TranslucentBackground);
-    //this->setStyleSheet(StyleHelper::getWindowStyleSheet());
-    //this->installEventFilter(this);
-    //ui->toolBar->installEventFilter(this);
-
-    //ui->labelAik->setStyleSheet(StyleHelper::getLabelStyleSheet());
     ui->minimize_button->setStyleSheet(StyleHelper::getMinimizeStyleSheet());
     ui->close_button->setStyleSheet(StyleHelper::getCloseStyleSheet());
 
     connect(ui->minimize_button, &QToolButton::clicked, this, &QWidget::showMinimized);
     connect(ui->close_button, &QToolButton::clicked, this, &QWidget::close);
-    /* start aik worker */
-    QThread* aik_worker_thread = new QThread();
-    aik_worker* _aik_worker = new aik_worker();
-    _aik_worker->moveToThread(aik_worker_thread);
-    connect(_aik_worker, &aik_worker::dispatch_debug_message, this, &aikwidget::set_debug_qstring);
-    connect( aik_worker_thread, &QThread::started, _aik_worker, &aik_worker::start);
 
-    connect(_aik_worker, &aik_worker::set_player_speed, this, &aikwidget::set_player_speed);
-    connect(_aik_worker, &aik_worker::set_player_attack_speed, this, &aikwidget::set_player_attack_speed);
-
-    connect(_aik_worker, &aik_worker::set_target_speed, this, &aikwidget::set_target_speed);
-    connect(_aik_worker, &aik_worker::set_target_attack_speed, this, &aikwidget::set_target_attack_speed);
-
-    connect(_aik_worker, &aik_worker::set_target_x, this, &aikwidget::set_target_x);
-    connect(_aik_worker, &aik_worker::set_target_y, this, &aikwidget::set_target_y);
-    connect(_aik_worker, &aik_worker::set_target_z, this, &aikwidget::set_target_z);
-    aik_worker_thread->start();
     /* qline filters */
     aik_process_values *aik_proc_val = new aik_process_values(this, kInputMask);
     ui->playerSpeedMod->installEventFilter(aik_proc_val);
     ui->playerAttackSpeedMod->installEventFilter(aik_proc_val);
     ui->targetSpeedMod->installEventFilter(aik_proc_val);
     ui->targetAttackSpeedMod->installEventFilter(aik_proc_val);
-    //ui->playerSpeedMod->editingFinished
+
     /* qline process entered values */
     connect(this, &aikwidget::input_player_speed, aik_proc_val, &aik_process_values::process_player_speed_qstring);
     connect(ui->playerSpeedMod, SIGNAL(editingFinished()), this, SLOT(read_input_player_speed()));
@@ -80,18 +53,30 @@ aikwidget::aikwidget(QWidget *parent)
     connect(aik_proc_val, &aik_process_values::player_attack_speed_write_operation, ui->playerAttackSpeedFunLabel, &QLabel::setText);
     // connect debug msg from aik_process_values
     connect(aik_proc_val, &aik_process_values::debug_qstr, this, &aikwidget::set_debug_qstring);
-    //QObject::connect(this, ui->playerSpeedMod->returnPressed(), this, ui->playerSpeedMod->returnPressed());
-    //connect()
-    //connect(ui->playerSpeedMod, &QLineEdit::returnPressed, this, &aikwidget::playerSpeedChanged);
 
-//    ui->consoleLogLabel->setTextFormat(Qt::MarkdownText);
-//    pipe* _pipe_obj = new pipe(TEXT("\\\\.\\pipe\\Pipe"));
+    /* start aik worker */
+    QThread* aik_worker_thread = new QThread();
+    aik_worker* _aik_worker = new aik_worker();
+    _aik_worker->moveToThread(aik_worker_thread);
+    // setup value handler
+    _aik_worker->set_aik_value_handler(aik_proc_val);
 
-//    auto f_h = [this](auto && PH1) { set_debug_string(std::forward<decltype(PH1)>(PH1)); };
-//    _pipe_obj->set_handler_fun(f_h);
-//    _pipe_obj->set_delay_ms(100);
-//    _pipe_obj->start();
-//    ui->playerSpeedMod->returnPressed()
+    connect(_aik_worker, &aik_worker::debug_qstr, this, &aikwidget::set_debug_qstring);
+    connect( aik_worker_thread, &QThread::started, _aik_worker, &aik_worker::start);
+    // only direct connection works
+    connect(ui->enablePlayerSpeed, &QCheckBox::stateChanged, _aik_worker, &aik_worker::update_player_speed_processing_button_state, Qt::DirectConnection);
+    connect(ui->enablePlayerAttackSpeed, &QCheckBox::stateChanged, _aik_worker, &aik_worker::update_player_attack_speed_processing_button_state, Qt::DirectConnection);
+
+    connect(_aik_worker, &aik_worker::set_player_speed, this, &aikwidget::set_player_speed);
+    connect(_aik_worker, &aik_worker::set_player_attack_speed, this, &aikwidget::set_player_attack_speed);
+
+    connect(_aik_worker, &aik_worker::set_target_speed, this, &aikwidget::set_target_speed);
+    connect(_aik_worker, &aik_worker::set_target_attack_speed, this, &aikwidget::set_target_attack_speed);
+
+    connect(_aik_worker, &aik_worker::set_target_x, this, &aikwidget::set_target_x);
+    connect(_aik_worker, &aik_worker::set_target_y, this, &aikwidget::set_target_y);
+    connect(_aik_worker, &aik_worker::set_target_z, this, &aikwidget::set_target_z);
+    aik_worker_thread->start();
 }
 
 aikwidget::~aikwidget()
@@ -176,4 +161,3 @@ void aikwidget::set_debug_qstring(const QString& dbg_qstr) {
     emit _dbg_qstr(dbg_qstr);
     //ui->consoleLogLabel->setText(dbg_qstr);
 }
-

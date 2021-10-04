@@ -39,16 +39,13 @@ aik_write_instructions::aik_write_instructions(std::string _str_operation) {
 }
 
 QString aik_write_instructions::operation_qstring() {
-    if (this->m_operator == AIK_INSTRUCTIONS::CONSTANT) {
-        return {};
-    }
     switch (m_operand.index()) {
         case 0: {
             auto operand_val = std::get<std::uint32_t>(m_operand);
             if (operand_val == 0) {
                 return {};
             }
-            return ((char)m_operator + QString::number(operand_val));
+            return (m_operator == AIK_INSTRUCTIONS::CONSTANT ? QString("lit. ") : QString((char)(m_operator))) + QString::number(operand_val);
             break;
         }
         case 1: {
@@ -56,9 +53,10 @@ QString aik_write_instructions::operation_qstring() {
             if (operand_val == 0) {
                 return {};
             }
-            return((char)m_operator + QString::number(operand_val));
+            qDebug() << QString::number(operand_val);
+            return(m_operator == AIK_INSTRUCTIONS::CONSTANT ? "lit.  " : (char)(m_operator) + QString::number(operand_val));
             break;
         }
     }
-    return {};
+    return {"Bad operation"};
 }

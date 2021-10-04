@@ -20,6 +20,13 @@ aik_process_values::aik_process_values(QWidget* parent, std::string mask)
     std::sort(utility_keys.begin(), utility_keys.end());
 }
 
+std::optional<aik_write_instructions> aik_process_values::get_player_speed_operation() {
+    return this->m_player_speed_operation;
+}
+std::optional<aik_write_instructions> aik_process_values::get_player_attack_speed_operation() {
+    return this->m_player_attack_speed_operation;
+}
+
 void aik_process_values::process_player_speed_qstring(const QString& _operation) {
     auto _write_inst = aik_write_instructions(_operation.toStdString());
     m_player_speed_operation = _write_inst;

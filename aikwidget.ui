@@ -810,7 +810,7 @@
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="playerEnableSpeedCheck">
+           <widget class="QCheckBox" name="enablePlayerSpeed">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -844,7 +844,7 @@ line-height: 0.4
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QCheckBox" name="playerEnableAttackSpeedCheck">
+           <widget class="QCheckBox" name="enablePlayerAttackSpeed">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -860,7 +860,7 @@ line-height: 0.4
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QCheckBox" name="noGravityCheck">
+           <widget class="QCheckBox" name="enableNoGravity">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -975,7 +975,7 @@ line-height: 0.3
         <item row="2" column="1">
          <layout class="QFormLayout" name="targetLayout_2">
           <item row="0" column="0">
-           <widget class="QCheckBox" name="targetLockSpeedCheck">
+           <widget class="QCheckBox" name="enableTargetSpeed">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -983,7 +983,7 @@ line-height: 0.3
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Lock Speed</string>
+             <string>Speed</string>
             </property>
            </widget>
           </item>
@@ -998,7 +998,7 @@ line-height: 0.3
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QCheckBox" name="targetLockAttackSpeedCheck">
+           <widget class="QCheckBox" name="enableTargetAttackSpeed">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1006,7 +1006,7 @@ line-height: 0.3
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Lock Attack Speed</string>
+             <string>Attack Speed</string>
             </property>
            </widget>
           </item>
@@ -1021,7 +1021,7 @@ line-height: 0.3
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QCheckBox" name="targetNoGravityCheck">
+           <widget class="QCheckBox" name="enableTargetNoGravity">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
