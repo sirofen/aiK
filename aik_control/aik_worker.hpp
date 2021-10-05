@@ -20,6 +20,8 @@ public slots:
     void update_player_speed_processing_button_state(int state);
     void update_player_attack_speed_processing_button_state(int state);
 
+    void stop_client();
+
 signals:
     void debug_qstr(QString debug_msg);
 

@@ -63,7 +63,10 @@ aikwidget::aikwidget(QWidget *parent)
 
     connect(_aik_worker, &aik_worker::debug_qstr, this, &aikwidget::set_debug_qstring);
     connect( aik_worker_thread, &QThread::started, _aik_worker, &aik_worker::start);
+
     // only direct connection works
+    connect(this, &aikwidget::stop_client, _aik_worker, &aik_worker::stop_client, Qt::DirectConnection);
+
     connect(ui->enablePlayerSpeed, &QCheckBox::stateChanged, _aik_worker, &aik_worker::update_player_speed_processing_button_state, Qt::DirectConnection);
     connect(ui->enablePlayerAttackSpeed, &QCheckBox::stateChanged, _aik_worker, &aik_worker::update_player_attack_speed_processing_button_state, Qt::DirectConnection);
 
@@ -110,6 +113,10 @@ void aikwidget::mouseMoveEvent(QMouseEvent *event)
         move(x() + dx,y() + dy);
     }
     return QWidget::mouseMoveEvent(event);
+}
+
+void aikwidget::closeEvent(QCloseEvent *event) {
+    emit stop_client();
 }
 
 QString aikwidget::get_player_speed() const {

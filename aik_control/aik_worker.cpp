@@ -9,6 +9,8 @@
 namespace {
 constexpr LPCTSTR mutex_name = TEXT("aiKMutex");
 constexpr LPCTSTR file_mapping_name = TEXT("Global\\aiKFileMapping");
+
+constexpr auto aik_tick_delay = 1;
 }
 
 aik_worker::aik_worker() {
@@ -29,7 +31,7 @@ void aik_worker::set_aik_value_handler(aik_process_values* value_handler) {
 
 void aik_worker::start() {
     DISPATCH_SHARED pshared_structs;
-    for (;;QThread::msleep(1000)) {
+    for (;;QThread::msleep(aik_tick_delay)) {
         //AIK_READ _a;
         //pshared_structs.m_aik_read->dbg_wprint = "3232";
         m_aik.read_shared_values(pshared_structs);
@@ -47,23 +49,10 @@ void aik_worker::update_player_attack_speed_processing_button_state(int state) {
     this->m_player_attack_speed_button_state = state;
 }
 
-//void aik_worker::set_player_speed_processing_button_state(bool _b) {
-//    qDebug() << "here";
-//    qDebug() << _b;
-//    //bool button_checked = _b == Qt::Checked;
-//    //this->m_player_speed_processing_enabled = button_checked;
-//    //emit dispatch_debug_message(QString("Player speed processing ") + (button_checked? "enabled" : "disabled"));
-//}
-//void aik_worker::set_player_attack_speed_processing_button_state(int _b) {
-//    qDebug() << _b;
-//    bool button_checked = _b == Qt::Checked;
-//    this->m_player_attack_speed_processing_enabled = button_checked;
-//    emit dispatch_debug_message(QString("Player attack speed processing ") + (button_checked? "enabled" : "disabled"));
-//}
-
-//namespace  {
-//    QString prev_msg_cache;
-//}
+void aik_worker::stop_client() {
+    m_aik.write_shared_values(AIK_READ{.m_run = false}.contruct_dispatch());
+    emit debug_qstr("Stopping client");
+}
 
 void aik_worker::process_shared_mem_dbg_msg(const QString& dbg_msg) {
     if (dbg_msg.isEmpty() || this->m_debug_message == dbg_msg) {
@@ -72,7 +61,9 @@ void aik_worker::process_shared_mem_dbg_msg(const QString& dbg_msg) {
     //prev_msg_cache = dbg_msg;
     /* append to prev string if no newline for versatility */
 //    if (dbg_msg.contains(QChar::LineFeed) || dbg_msg.contains(QChar::CarriageReturn)) {
-        this->m_debug_message = dbg_msg;
+    this->m_debug_message = dbg_msg;
+    // flush values
+    m_aik.write_shared_values(AIK_READ{}.contruct_dispatch());
 //        emit dispatch_debug_message(this->m_debug_message);
 //        return;
 //    }
@@ -100,7 +91,8 @@ float prev_target_z = {};
 void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
     AIK_WRITE _aik_write{};
     this->process_shared_mem_dbg_msg(QString::fromWCharArray(up_aik_read.dbg_wprint));
-    if (auto player_speed = up_aik_read.player_speed; prev_player_speed != player_speed) {
+
+    if (auto player_speed = up_aik_read.player_speed; player_speed != 0 && prev_player_speed != player_speed) {
         prev_player_speed = player_speed;
 
         if (m_player_speed_button_state == Qt::Checked && m_paik_process_values && m_paik_process_values->get_player_speed_operation()) {
@@ -119,7 +111,7 @@ void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
         }
         emit set_player_speed(player_speed);
     }
-    if (auto player_attack_speed = up_aik_read.player_attack_speed; prev_player_attack_speed != player_attack_speed) {
+    if (auto player_attack_speed = up_aik_read.player_attack_speed; player_attack_speed && prev_player_attack_speed != player_attack_speed) {
         prev_player_attack_speed = player_attack_speed;
 
         if (m_player_attack_speed_button_state == Qt::Checked && m_paik_process_values && m_paik_process_values->get_player_attack_speed_operation()) {

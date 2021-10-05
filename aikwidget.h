@@ -30,6 +30,8 @@ signals:
 
     void _dbg_qstr(const QString& dbg_qstr);
 
+    void stop_client();
+
 public slots:
     void set_player_speed(float player_speed);
     void set_player_attack_speed(quint32 player_attack_speed);
@@ -53,6 +55,8 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+
+    void closeEvent(QCloseEvent *event);
 
 private:
     Ui::aikwidget *ui;
