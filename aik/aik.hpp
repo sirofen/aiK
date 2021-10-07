@@ -28,7 +28,7 @@ public:
     bool init_shared_mutex(LPCTSTR name, AIK_INIT_APPROACH init_appr);
     bool init_shared_memory(LPCTSTR name, AIK_INIT_APPROACH init_appr);
 
-private:
+//private:
     std::unique_ptr<shared_mutex> m_shared_mutex;
     std::unique_ptr<shared_memory> m_shared_memory;
 };

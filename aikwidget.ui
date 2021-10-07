@@ -795,7 +795,7 @@
         <bool>true</bool>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
+        <item row="1" column="0">
          <layout class="QGridLayout" name="gridLayout">
           <property name="leftMargin">
            <number>0</number>
@@ -946,7 +946,78 @@ line-height: 0.3
             </property>
            </widget>
           </item>
+          <item row="2" column="2">
+           <widget class="QCheckBox" name="enableRadar">
+            <property name="text">
+             <string>Radar</string>
+            </property>
+           </widget>
+          </item>
          </layout>
+        </item>
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="playerPosGroupBox">
+          <property name="title">
+           <string>Pos</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <property name="spacing">
+            <number>3</number>
+           </property>
+           <item row="0" column="0">
+            <layout class="QGridLayout" name="playerPosGridLayout">
+             <property name="spacing">
+              <number>3</number>
+             </property>
+             <item row="1" column="3">
+              <widget class="QDoubleSpinBox" name="playerZCoordBox">
+               <property name="maximum">
+                <double>9999.989999999999782</double>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="playerYCoordBox">
+               <property name="maximum">
+                <double>9999.989999999999782</double>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QDoubleSpinBox" name="playerXCoordBox">
+               <property name="maximum">
+                <double>9999.989999999999782</double>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="playerXCoordLabel">
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;X&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="playerYCoordLabel">
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Y&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="playerZCoordLabel">
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1081,28 +1152,28 @@ line-height: 0.3
               <number>0</number>
              </property>
              <item row="0" column="2">
-              <widget class="QLabel" name="targetZCordLabel">
+              <widget class="QLabel" name="targetZCoordLabel">
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QLabel" name="targetYCordLabel">
+              <widget class="QLabel" name="targetYCoordLabel">
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Y&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QLabel" name="targetXCordLabel">
+              <widget class="QLabel" name="targetXCoordLabel">
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;X&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
              </item>
              <item row="1" column="2">
-              <widget class="QDoubleSpinBox" name="targetZCordBox">
+              <widget class="QDoubleSpinBox" name="targetZCoordBox">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1112,7 +1183,7 @@ line-height: 0.3
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="targetYCordBox">
+              <widget class="QDoubleSpinBox" name="targetYCoordBox">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1122,7 +1193,7 @@ line-height: 0.3
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QDoubleSpinBox" name="targetXCordBox">
+              <widget class="QDoubleSpinBox" name="targetXCoordBox">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>

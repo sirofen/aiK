@@ -11,7 +11,9 @@ struct _AIK_READ {
     wchar_t player_name[32]{};
     unsigned char player_level{};
 
-    bool player_no_gravity{};
+    bool player_no_gravity = false;
+    bool radar = false;
+
     float player_speed{};
     std::uint32_t player_attack_speed{};
 
@@ -36,7 +38,8 @@ typedef _AIK_READ AIK_READ, *PAIK_READ;
 struct _AIK_WRITE {
     DISPATCH_SHARED contruct_dispatch() const;
     const static unsigned long size() noexcept;
-    bool no_gravity{};
+    bool no_gravity = false;;
+    bool radar = false;
     float speed{};
     std::uint32_t attack_speed{};
 

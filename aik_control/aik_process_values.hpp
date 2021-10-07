@@ -12,6 +12,9 @@ public:
     std::optional<aik_write_instructions> get_player_speed_operation();
     std::optional<aik_write_instructions> get_player_attack_speed_operation();
 
+    void set_player_speed_operation(std::optional<aik_write_instructions> _write_inst);
+    void set_player_attack_speed_operation(std::optional<aik_write_instructions> _write_inst);
+
 public slots:
     void process_player_speed_qstring(const QString& _operation);
     void process_player_attack_speed_qstring(const QString& _operation);

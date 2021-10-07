@@ -27,6 +27,13 @@ std::optional<aik_write_instructions> aik_process_values::get_player_attack_spee
     return this->m_player_attack_speed_operation;
 }
 
+void aik_process_values::set_player_speed_operation(std::optional<aik_write_instructions> _write_inst) {
+    this->m_player_speed_operation = _write_inst;
+}
+void aik_process_values::set_player_attack_speed_operation(std::optional<aik_write_instructions> _write_inst) {
+    this->m_player_attack_speed_operation = _write_inst;
+}
+
 void aik_process_values::process_player_speed_qstring(const QString& _operation) {
     auto _write_inst = aik_write_instructions(_operation.toStdString());
     m_player_speed_operation = _write_inst;

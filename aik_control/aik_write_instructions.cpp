@@ -35,7 +35,10 @@ aik_write_instructions::aik_write_instructions(std::string _str_operation) {
     }  catch (const std::exception& e) {
         qWarning(e.what());
     }
+}
 
+AIK_INSTRUCTIONS aik_write_instructions::operation_type() {
+    return this->m_operator;
 }
 
 QString aik_write_instructions::operation_qstring() {

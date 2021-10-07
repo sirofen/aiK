@@ -82,6 +82,8 @@ public:
         return {};
     }
 
+    AIK_INSTRUCTIONS operation_type();
+
     QString operation_qstring();
 
 private:

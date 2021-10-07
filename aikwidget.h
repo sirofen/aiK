@@ -58,6 +58,8 @@ protected:
 
     void closeEvent(QCloseEvent *event);
 
+    bool eventFilter(QObject* object, QEvent* event) override;
+
 private:
     Ui::aikwidget *ui;
 
