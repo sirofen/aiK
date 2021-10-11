@@ -101,6 +101,7 @@ aikwidget::aikwidget(QWidget *parent)
 
     connect(ui->enableNoGravity, &QCheckBox::stateChanged, _aik_worker, &aik_worker::set_player_gravity_button_state, Qt::DirectConnection);
     connect(ui->enableRadar, &QCheckBox::stateChanged, _aik_worker, &aik_worker::set_radar_button_state, Qt::DirectConnection);
+    connect(ui->enableConsole, &QCheckBox::stateChanged, _aik_worker, &aik_worker::set_console_button_state, Qt::DirectConnection);
 
     connect(_aik_worker, &aik_worker::set_player_speed, this, &aikwidget::set_player_speed);
     connect(_aik_worker, &aik_worker::set_player_attack_speed, this, &aikwidget::set_player_attack_speed);

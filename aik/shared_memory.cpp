@@ -61,6 +61,7 @@ void shared_memory::map_view(DWORD dwDesiredAccess,
                                               dwFileOffsetHigh,
                                               dwFileOffsetLow,
                                               dwNumberOfBytesToMap);
+                //ZeroMemory(m_mapped_addr, dwNumberOfBytesToMap);
             } __finally {
                 if (!ReleaseMutex(m_hmutex)) {
                     display_error("Release mutex error");

@@ -84,7 +84,11 @@ void aik_worker::set_player_gravity_button_state(int state) {
 }
 void aik_worker::set_radar_button_state(int state) {
     emit debug_qstr("Radar button state changed: " + QString::number(state));
-    this->m_client_radar_button_state = state;
+    this->m_radar_button_state = state;
+}
+void aik_worker::set_console_button_state(int state) {
+    emit debug_qstr("Console button state changed: " + QString::number(state));
+    this->m_console_button_state = state;
 }
 void aik_worker::set_player_x_to_write(double _v) {
     this->m_player_x_to_write = (float)_v;
@@ -200,7 +204,8 @@ void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
     this->process_shared_mem_dbg_msg(QString::fromWCharArray(up_aik_read.dbg_wprint));
 
     _aik_write.no_gravity = m_no_gravity_button_state == Qt::Checked;
-    _aik_write.radar = m_client_radar_button_state == Qt::Checked;
+    _aik_write.radar = m_radar_button_state == Qt::Checked;
+    _aik_write.disable_console = m_console_button_state != Qt::Checked;
     //qDebug() << __FUNCTION__ << m_client_player_speed << " : " << up_aik_read.player_speed;
     if (auto player_speed = up_aik_read.player_speed; player_speed != 0 && m_client_player_speed != player_speed) {
         if (m_player_speed_button_state != Qt::Checked) {

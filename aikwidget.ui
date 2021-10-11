@@ -825,40 +825,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QLineEdit" name="playerSpeedMod">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>&lt;style&gt;
-p.line_height {
-line-height: 0.4
-}
-&lt;/style&gt;
-&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p class=&quot;line_height&quot;&gt;Write Literal value or an Operation.&lt;/p&gt;&lt;p class=&quot;line_height&quot;&gt;Supported operators: &lt;span style=&quot; font-weight:600;&quot;&gt;- + *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operation example:&lt;span style=&quot; font-weight:600;&quot;&gt; *0.25&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="enablePlayerAttackSpeed">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>Enable Speed Modification</string>
-            </property>
-            <property name="text">
-             <string>Attack Speed</string>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QCheckBox" name="enableNoGravity">
             <property name="sizePolicy">
@@ -872,24 +838,6 @@ line-height: 0.4
             </property>
             <property name="text">
              <string>No Gravity</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLineEdit" name="playerAttackSpeedMod">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>&lt;style&gt;
-p.line_height {
-line-height: 0.3
-}
-&lt;/style&gt;
-&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p class=&quot;line_height&quot;&gt;Write Literal value or an Operation.&lt;/p&gt;&lt;p class=&quot;line_height&quot;&gt;Supported operators: &lt;span style=&quot; font-weight:600;&quot;&gt;- + *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operation example:&lt;span style=&quot; font-weight:600;&quot;&gt; *0.25&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -946,7 +894,66 @@ line-height: 0.3
             </property>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="enablePlayerAttackSpeed">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>Enable Speed Modification</string>
+            </property>
+            <property name="text">
+             <string>Attack Speed</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="playerAttackSpeedMod">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>&lt;style&gt;
+p.line_height {
+line-height: 0.3
+}
+&lt;/style&gt;
+&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p class=&quot;line_height&quot;&gt;Write Literal value or an Operation.&lt;/p&gt;&lt;p class=&quot;line_height&quot;&gt;Supported operators: &lt;span style=&quot; font-weight:600;&quot;&gt;- + *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operation example:&lt;span style=&quot; font-weight:600;&quot;&gt; *0.25&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLineEdit" name="playerSpeedMod">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>&lt;style&gt;
+p.line_height {
+line-height: 0.4
+}
+&lt;/style&gt;
+&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p class=&quot;line_height&quot;&gt;Write Literal value or an Operation.&lt;/p&gt;&lt;p class=&quot;line_height&quot;&gt;Supported operators: &lt;span style=&quot; font-weight:600;&quot;&gt;- + *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operation example:&lt;span style=&quot; font-weight:600;&quot;&gt; *0.25&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
           <item row="2" column="2">
+           <widget class="QCheckBox" name="enableConsole">
+            <property name="text">
+             <string>Console</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
            <widget class="QCheckBox" name="enableRadar">
             <property name="text">
              <string>Radar</string>

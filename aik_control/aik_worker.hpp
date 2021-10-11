@@ -24,6 +24,7 @@ public slots:
 
     void set_player_gravity_button_state(int state);
     void set_radar_button_state(int state);
+    void set_console_button_state(int state);
 
     void set_player_x_to_write(double _v);
     void set_player_y_to_write(double _v);
@@ -78,7 +79,8 @@ private:
     int m_player_attack_speed_button_state;
 
     int m_no_gravity_button_state;
-    int m_client_radar_button_state;
+    int m_radar_button_state;
+    int m_console_button_state;
 
     std::uint32_t m_client_player_attack_speed = 0;
     float m_client_player_speed = 0;
