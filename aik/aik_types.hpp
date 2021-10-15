@@ -32,6 +32,9 @@ struct _AIK_READ {
 
     wchar_t dbg_wprint[100]{};
 
+    bool m_aion_client_running = false;
+    bool m_aion_console_found = false;
+    bool m_aion_player_found = false;
     bool m_run = true;
 };
 typedef _AIK_READ AIK_READ, *PAIK_READ;

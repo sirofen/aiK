@@ -23,7 +23,7 @@ public:
     void start();
 
     int read_shared_values(DISPATCH_SHARED& _pdispatch_shared_struct);
-    int write_shared_values(const DISPATCH_SHARED& _pdispatch_shared_struct);
+    int write_shared_values(const DISPATCH_SHARED& _pdispatch_shared_struct, int sz_diff = -4);
 
     bool init_shared_mutex(LPCTSTR name, AIK_INIT_APPROACH init_appr);
     bool init_shared_memory(LPCTSTR name, AIK_INIT_APPROACH init_appr);

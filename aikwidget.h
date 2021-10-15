@@ -3,11 +3,15 @@
 #include <QWidget>
 #include <QString>
 
+#include <lock_mod.hpp>
+
 #define AIK_ICON QIcon(":/aiK/res/aiK.jpg")
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class aikwidget; }
 QT_END_NAMESPACE
+
+class QProcess;
 
 class aikwidget : public QWidget
 {
@@ -25,29 +29,36 @@ signals:
     void input_player_speed(const QString& _val);
     void input_player_attack_speed(const QString& _val);
 
-    void input_target_speed(const QString& _val);
-    void input_target_attack_speed(const QString& _val);
+//    void input_target_speed(const QString& _val);
+//    void input_target_attack_speed(const QString& _val);
 
     void _dbg_qstr(const QString& dbg_qstr);
 
     void stop_client();
 
 public slots:
+    void load_driver();
+    void start_aik();
+    void reset_settings();
+    void lock_gui_ents(::lock_mod::lock_ents le, bool enable);
+
+    void set_load_driver_on_startup(int button_state);
+
     void set_player_speed(float player_speed);
     void set_player_attack_speed(quint32 player_attack_speed);
 
-    void set_target_speed(float target_speed);
-    void set_target_attack_speed(quint32 target_attack_speed);
+//    void set_target_speed(float target_speed);
+//    void set_target_attack_speed(quint32 target_attack_speed);
 
-    void set_target_x(float target_x);
-    void set_target_y(float target_y);
-    void set_target_z(float target_z);
+//    void set_target_x(float target_x);
+//    void set_target_y(float target_y);
+//    void set_target_z(float target_z);
 
     void read_input_player_speed();
     void read_input_player_attack_speed();
 
-    void read_input_target_speed();
-    void read_input_target_attack_speed();
+//    void read_input_target_speed();
+//    void read_input_target_attack_speed();
 
     void set_debug_qstring(const QString& dbg_qstr);
 
@@ -61,6 +72,9 @@ protected:
     bool eventFilter(QObject* object, QEvent* event) override;
 
 private:
+    void start_proc(QString program, QStringList args = {}, bool blocking = false);
+    QProcess *m_paik_proc{};
+
     Ui::aikwidget *ui;
 
     bool m_lmb_pressed = false;
@@ -73,4 +87,6 @@ private:
 
     float target_speed;
     float target_attack_speed;
+
+    QString m_aik_bin;
 };

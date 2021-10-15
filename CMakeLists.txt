@@ -49,6 +49,11 @@ set(PROJECT_SOURCES
         aik_control/aik_process_values.cpp
         aik_control/aik_write_instructions.hpp
         aik_control/aik_write_instructions.cpp
+
+        wintaskscheduler.hpp
+        wintaskscheduler.cpp
+
+        lock_mod.hpp
 )
 
 qt_add_resources(PROJECT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/aiK.qrc)
