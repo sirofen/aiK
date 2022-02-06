@@ -30,7 +30,10 @@ void aik_worker::set_aik_value_handler(aik_process_values* value_handler) {
 }
 
 void aik_worker::start() {
-    DISPATCH_SHARED pshared_structs;
+    // write default read values into shared memory
+    //m_aik.write_shared_values(AIK_READ{}.contruct_dispatch(), 0);
+
+    DISPATCH_SHARED pshared_structs{};
     for (;;QThread::msleep(aik_tick_delay)) {
         //AIK_READ _a;
         //pshared_structs.m_aik_read->dbg_wprint = "3232";
@@ -154,7 +157,7 @@ void aik_worker::process_target_attack_speed_qstring(const QString& _operation) 
 #include <aik/shared_memory.hpp>
 void aik_worker::stop_client() {
     emit debug_qstr("Stopping client");
-    m_aik.write_shared_values(AIK_READ{.m_run = false}.contruct_dispatch());
+    m_aik.write_shared_values(AIK_READ{.m_run = false}.contruct_dispatch(), 0);
     if (m_aik.m_shared_mutex) {
         m_aik.m_shared_mutex->~shared_mutex();
     }
@@ -165,15 +168,19 @@ void aik_worker::stop_client() {
 }
 
 void aik_worker::process_shared_mem_dbg_msg(const QString& dbg_msg) {
-    if (dbg_msg.isEmpty() || this->m_debug_message == dbg_msg) {
+    if (dbg_msg.isEmpty()) {
+        return;
+    }
+    // flush values
+    m_aik.write_shared_values(AIK_READ{}.contruct_dispatch());
+    if (this->m_debug_message == dbg_msg) {
         return;
     }
     //prev_msg_cache = dbg_msg;
     /* append to prev string if no newline for versatility */
 //    if (dbg_msg.contains(QChar::LineFeed) || dbg_msg.contains(QChar::CarriageReturn)) {
     this->m_debug_message = dbg_msg;
-    // flush values
-    m_aik.write_shared_values(AIK_READ{}.contruct_dispatch());
+//    qDebug() << ".";
 //        emit dispatch_debug_message(this->m_debug_message);
 //        return;
 //    }
@@ -202,6 +209,14 @@ float prev_target_z = {};
 void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
     AIK_WRITE _aik_write{};
     this->process_shared_mem_dbg_msg(QString::fromWCharArray(up_aik_read.dbg_wprint));
+
+    if (std::wcslen(up_aik_read.player_name) != 0) {
+        emit set_player_group_box_title(QString::fromStdWString(up_aik_read.player_name));
+    }
+
+    emit set_gui_ents_enable(::lock_mod::lock_ents::PLAYER_MOD, up_aik_read.m_aion_player_found);
+    emit set_gui_ents_enable(::lock_mod::lock_ents::LOAD_DRIVER, !up_aik_read.m_aion_client_running);
+    emit set_gui_ents_enable(::lock_mod::lock_ents::CONSOLE_MOD, up_aik_read.m_aion_console_found);
 
     _aik_write.no_gravity = m_no_gravity_button_state == Qt::Checked;
     _aik_write.radar = m_radar_button_state == Qt::Checked;

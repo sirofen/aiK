@@ -3,6 +3,7 @@
 #include <QObject>
 
 #include <aik/aik.hpp>
+#include <lock_mod.hpp>
 
 class aik;
 class aik_process_values;
@@ -43,10 +44,16 @@ public slots:
     void stop_client();
 
 signals:
+    void initialized();
+
     void debug_qstr(QString debug_msg);
+
+    void set_gui_ents_enable(::lock_mod::lock_ents ls, bool enable);
 
     void set_player_speed(float player_speed);
     void set_player_attack_speed(quint32 player_attack_speed);
+
+    void set_player_group_box_title(const QString& title);
 
     void set_ui_player_x(double _v);
     void set_ui_player_y(double _v);
