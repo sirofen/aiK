@@ -7,6 +7,10 @@
 
 int main(int argc, char *argv[])
 {
+    if (argc < 2 || strcmp(argv[1], "-run") != 0) {
+        return 1;
+    }
+
     QApplication a(argc, argv);
     a.setStyle(QStyleFactory::create("Fusion"));
 
