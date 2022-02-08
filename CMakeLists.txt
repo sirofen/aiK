@@ -23,7 +23,6 @@ set(PROJECT_SOURCES
         aikwidget.cpp
         aikwidget.h
         aikwidget.ui
-        pipe.hpp
         collapse_button.h
 
         style/style.hpp

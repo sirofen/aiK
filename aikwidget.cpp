@@ -5,7 +5,6 @@
 #include <QProcess>
 
 #include <collapse_button.h>
-#include <pipe.hpp>
 #include <aik_control/aik_process_values.hpp>
 #include <aik_control/aik_worker.hpp>
 #include <style/style.hpp>
