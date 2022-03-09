@@ -3,6 +3,7 @@
 
 #include <QKeyEvent>
 #include <QProcess>
+#include <QThread>
 
 #include <collapse_button.h>
 #include <aik_control/aik_process_values.hpp>
