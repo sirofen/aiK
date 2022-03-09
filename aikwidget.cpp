@@ -21,12 +21,7 @@ constexpr auto kAikBinLoadDrvArgs = "-LOADDRIVER";
 }
 
 aikwidget::aikwidget(QWidget *parent)
-    : QWidget(parent,/* Qt::Window
-                    | Qt::MSWindowsFixedSizeDialogHint
-                    | Qt::CustomizeWindowHint
-                    | Qt::WindowTitleHint
-                    | Qt::WindowCloseButtonHint *//*| Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint*/
-                    Qt::FramelessWindowHint)
+    : QWidget(parent, Qt::FramelessWindowHint)
     , ui(new Ui::aikwidget)
 {
     this->setWindowIcon(AIK_ICON);
