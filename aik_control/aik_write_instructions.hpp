@@ -4,7 +4,7 @@
 #include <variant>
 #include <QDebug>
 
-enum class AIK_INSTRUCTIONS : char {
+enum class aik_operator : char {
     PLUS = '+',
     MINUS = '-',
     MULTIPLY = '*',
@@ -16,32 +16,32 @@ class aik_write_instructions
 {
     using operand = std::variant<std::uint32_t, float>;
 public:
-    aik_write_instructions(AIK_INSTRUCTIONS _operator, std::uint32_t _operand);
-    aik_write_instructions(AIK_INSTRUCTIONS _operator, float _operand);
+    aik_write_instructions(aik_operator _operator, std::uint32_t _operand);
+    aik_write_instructions(aik_operator _operator, float _operand);
 
     aik_write_instructions(std::string _str_operation);
 
     template <typename T, std::enable_if_t<std::is_integral<T>::value || std::is_floating_point<T>::value, bool> = true>
     /* I hate this, but i wanna sleep */
-    T apply(const T& _val) {
+    T apply(T& _val) {
         if (m_operand.index() == 0) {
             auto operand_val = std::get<std::uint32_t>(m_operand);
             try {
                 switch(this->m_operator) {
-                    case AIK_INSTRUCTIONS::PLUS: {
-                        return _val + operand_val;
+                    case aik_operator::PLUS: {
+                        return _val += operand_val;
                     }
-                    case AIK_INSTRUCTIONS::MINUS: {
-                        return _val - operand_val;
+                    case aik_operator::MINUS: {
+                        return _val -= operand_val;
                     }
-                    case AIK_INSTRUCTIONS::MULTIPLY: {
-                        return _val * operand_val;
+                    case aik_operator::MULTIPLY: {
+                        return _val *= operand_val;
                     }
-                    case AIK_INSTRUCTIONS::DIVIDE: {
-                        return _val / operand_val;
+                    case aik_operator::DIVIDE: {
+                        return _val /= operand_val;
                     }
-                    case AIK_INSTRUCTIONS::CONSTANT: {
-                        return operand_val;
+                    case aik_operator::CONSTANT: {
+                        return _val = operand_val;
                     }
                     default: {
                         return _val;
@@ -55,20 +55,20 @@ public:
             auto operand_val = std::get<float>(m_operand);
             try {
                 switch(this->m_operator) {
-                    case AIK_INSTRUCTIONS::PLUS: {
-                        return _val + operand_val;
+                    case aik_operator::PLUS: {
+                        return _val += operand_val;
                     }
-                    case AIK_INSTRUCTIONS::MINUS: {
-                        return _val - operand_val;
+                    case aik_operator::MINUS: {
+                        return _val -= operand_val;
                     }
-                    case AIK_INSTRUCTIONS::MULTIPLY: {
-                        return _val * operand_val;
+                    case aik_operator::MULTIPLY: {
+                        return _val *= operand_val;
                     }
-                    case AIK_INSTRUCTIONS::DIVIDE: {
-                        return _val / operand_val;
+                    case aik_operator::DIVIDE: {
+                        return _val /= operand_val;
                     }
-                    case AIK_INSTRUCTIONS::CONSTANT: {
-                        return operand_val;
+                    case aik_operator::CONSTANT: {
+                        return _val = operand_val;
                     }
                     default: {
                         return _val;
@@ -82,11 +82,11 @@ public:
         return {};
     }
 
-    AIK_INSTRUCTIONS operation_type();
+    aik_operator operation_type();
 
     QString operation_qstring();
 
 private:
-    AIK_INSTRUCTIONS m_operator;
+    aik_operator m_operator;
     operand m_operand;
 };

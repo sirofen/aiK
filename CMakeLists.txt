@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
         logview.hpp
         logview.cpp
 
+        aik/aik_symbols.hpp
+
         aik/aik.hpp
         aik/aik.cpp
         aik/shared_memory.hpp
