@@ -1,6 +1,5 @@
 // https://github.com/grenadium/ShugoConsole
-#ifndef WINTASKSCHEDULER_H
-#define WINTASKSCHEDULER_H
+#pragma once
 
 #include <QString>
 
@@ -11,5 +10,3 @@ public:
     static bool deleteTask(const QString& taskName);
     static bool createStartupTask(const QString& taskName, const QString& taskPath);
 };
-
-#endif // WINTASKSCHEDULER_H

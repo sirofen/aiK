@@ -2,16 +2,22 @@
 
 #include <QObject>
 
-#include <aik/aik.hpp>
 #include <lock_mod.hpp>
 
-class aik;
+//class aik_old;
 class aik_process_values;
+
+namespace aik {
+class aik_process;
+class client_values;
+class aion_write;
+}
 
 class aik_worker : public QObject {
     Q_OBJECT
 public:
     aik_worker();
+    ~aik_worker();
 
     void set_aik_value_handler(aik_process_values* value_handler);
 
@@ -43,6 +49,8 @@ public slots:
 
     void stop_client();
 
+    void map_driver();
+
 signals:
     void initialized();
 
@@ -72,9 +80,7 @@ signals:
 private:
     void process_shared_mem_dbg_msg(const QString& dbg_msg);
 
-    void dispatch_shared_values_to_write(const AIK_WRITE& _aik_write);
-
-    void process_read_values(const AIK_READ& up_aik_read);
+    void process_read_values(aik::client_values aik_client_values);
 
     void apply_existing_inst_and_write_player_speed();
     void apply_existing_inst_and_write_player_attack_speed();
@@ -99,7 +105,7 @@ private:
     float m_player_y_to_write;
     float m_player_z_to_write;
 
-    aik m_aik;
+    aik::aik_process* m_aik_process;
     QString m_debug_message;
 };
 

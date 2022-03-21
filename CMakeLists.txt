@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
 project(ai_k_widg VERSION 0.1 LANGUAGES CXX)
 
@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_PREFIX_PATH $ENV{QT_MSVC_CMAKE_PATH})
@@ -31,17 +31,11 @@ set(PROJECT_SOURCES
         logview.hpp
         logview.cpp
 
-        aik/aik_symbols.hpp
+        aik/symbols/aik_process.hpp
+        aik/symbols/client_values.hpp
+        aik/symbols/aion_write_builder.hpp
+        aik/symbols/aion_write.hpp
 
-        aik/aik.hpp
-        aik/aik.cpp
-        aik/shared_memory.hpp
-        aik/shared_memory.cpp
-        aik/shared_mutex.hpp
-        aik/shared_mutex.cpp
-        aik/global_vars.hpp
-        aik/aik_types.hpp
-        aik/aik_types.cpp
         aik/err.hpp
 
         aik_control/aik_worker.hpp
@@ -71,9 +65,13 @@ else ()
             )
 endif ()
 
+
 if (HIDE_CONSOLE_WINDOW)
 set_target_properties(ai_k_widg PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
+
+# download aik-user
+include(cmake/FetchAionUser.cmake)
 
 target_link_libraries(ai_k_widg PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
@@ -83,6 +81,10 @@ set_target_properties(ai_k_widg PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
+# POST_BUILD patcher
+include(cmake/PatchBinary.cmake)
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ai_k_widg)
 endif()
+

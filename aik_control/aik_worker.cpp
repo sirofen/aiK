@@ -1,28 +1,25 @@
 #include <aik_control/aik_worker.hpp>
-#include <aik/aik.hpp>
 
 #include <aik_control/aik_process_values.hpp>
+
+#include <aik/symbols/aik_process.hpp>
+#include <aik/symbols/aion_write_builder.hpp>
+#include <aik/symbols/client_values.hpp>
+#include <aik/symbols/aion_write.hpp>
 
 #include <QThread>
 #include <QDebug>
 
 namespace {
-constexpr LPCTSTR mutex_name = TEXT("aiKMutex");
-constexpr LPCTSTR file_mapping_name = TEXT("Global\\aiKFileMapping");
-
 constexpr auto aik_tick_delay = 100;
 }
 
-aik_worker::aik_worker() {
-    if (!m_aik.init_shared_mutex(mutex_name, AIK_INIT_APPROACH::CREATE)) {
-        return;
-    }
-    qDebug() << "Init shared mutex success";
-    if (!m_aik.init_shared_memory(file_mapping_name, AIK_INIT_APPROACH::CREATE)) {
-        return;
-    }
-    qDebug() << "Init shared memory success";
+aik_worker::aik_worker()
+    : m_aik_process(new aik::aik_process()) {
+    m_aik_process->force_init_async();
 }
+
+aik_worker::~aik_worker() = default;
 
 void aik_worker::set_aik_value_handler(aik_process_values* value_handler) {
     this->m_paik_process_values = value_handler;
@@ -30,16 +27,8 @@ void aik_worker::set_aik_value_handler(aik_process_values* value_handler) {
 }
 
 void aik_worker::start() {
-    // write default read values into shared memory
-    //m_aik.write_shared_values(AIK_READ{}.contruct_dispatch(), 0);
-
-    DISPATCH_SHARED pshared_structs{};
     for (;;QThread::msleep(aik_tick_delay)) {
-        //AIK_READ _a;
-        //pshared_structs.m_aik_read->dbg_wprint = "3232";
-        m_aik.read_shared_values(pshared_structs);
-        //qDebug() << pshared_structs.m_aik_read->player_speed;
-        this->process_read_values(*pshared_structs.m_aik_read);
+        this->process_read_values(m_aik_process->read_client_values());
     }
 }
 
@@ -47,8 +36,9 @@ void aik_worker::reset_settings() {
     this->m_paik_process_values->set_player_speed_operation(std::nullopt);
     this->m_paik_process_values->set_player_attack_speed_operation(std::nullopt);
 
-    m_aik.write_shared_values(AIK_WRITE{.speed = m_unchanged_player_speed,
-                                        .attack_speed = m_unchanged_player_attack_speed}.contruct_dispatch());
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_speed(m_unchanged_player_speed);
+    aion_write_builder.set_attack_speed(m_unchanged_player_attack_speed);
 
     emit player_speed_write_operation("");
     emit player_attack_speed_write_operation("");
@@ -65,7 +55,9 @@ void aik_worker::update_player_speed_processing_button_state(int state) {
         return;
     }
     //qDebug() << "writing unchanged" << m_unchanged_player_speed;
-    m_aik.write_shared_values(AIK_WRITE{.speed = m_unchanged_player_speed}.contruct_dispatch());
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_speed(m_unchanged_player_speed);
+    m_aik_process->write_client_values(aion_write_builder.build());
 }
 void aik_worker::update_player_attack_speed_processing_button_state(int state) {
     emit debug_qstr("Player attack speed button state changed: " + QString::number(state));
@@ -78,7 +70,9 @@ void aik_worker::update_player_attack_speed_processing_button_state(int state) {
         return;
     }
     //qDebug() << "writing unchanged" << m_unchanged_player_speed;
-    m_aik.write_shared_values(AIK_WRITE{.attack_speed = m_unchanged_player_attack_speed}.contruct_dispatch());
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_attack_speed(m_unchanged_player_attack_speed);
+    m_aik_process->write_client_values(aion_write_builder.build());
 }
 
 void aik_worker::set_player_gravity_button_state(int state) {
@@ -103,13 +97,19 @@ void aik_worker::set_player_z_to_write(double _v) {
     this->m_player_z_to_write = (float)_v;
 }
 void aik_worker::write_player_x_to_client() {
-    m_aik.write_shared_values(AIK_WRITE{.player_x = m_player_x_to_write}.contruct_dispatch());
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_pos_x(m_player_x_to_write);
+    m_aik_process->write_client_values(aion_write_builder.build());
 }
 void aik_worker::write_player_y_to_client() {
-    m_aik.write_shared_values(AIK_WRITE{.player_y = m_player_y_to_write}.contruct_dispatch());
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_pos_y(m_player_y_to_write);
+    m_aik_process->write_client_values(aion_write_builder.build());
 }
 void aik_worker::write_player_z_to_client() {
-    m_aik.write_shared_values(AIK_WRITE{.player_z = m_player_z_to_write}.contruct_dispatch());
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_pos_z(m_player_z_to_write);
+    m_aik_process->write_client_values(aion_write_builder.build());
 }
 void aik_worker::process_player_speed_qstring(const QString& _operation) {
     auto _write_inst = aik_write_instructions(_operation.toStdString());
@@ -124,7 +124,10 @@ void aik_worker::process_player_speed_qstring(const QString& _operation) {
         return;
     }
     this->m_paik_process_values->set_player_speed_operation(std::nullopt);
-    m_aik.write_shared_values(AIK_WRITE{.speed = m_unchanged_player_speed}.contruct_dispatch());
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_speed(m_unchanged_player_speed);
+    m_aik_process->write_client_values(aion_write_builder.build());
+    //m_aik.write_shared_values(AIK_WRITE{.speed = m_unchanged_player_speed}.contruct_dispatch());
     emit player_speed_write_operation("");
     emit debug_qstr("Player speed " + _operation + " not an operation");
     //int32_t _val = 11;
@@ -142,7 +145,9 @@ void aik_worker::process_player_attack_speed_qstring(const QString& _operation) 
         return;
     }
     this->m_paik_process_values->set_player_attack_speed_operation(std::nullopt);
-    m_aik.write_shared_values(AIK_WRITE{.attack_speed = m_unchanged_player_attack_speed}.contruct_dispatch());
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_attack_speed(m_unchanged_player_attack_speed);
+    m_aik_process->write_client_values(aion_write_builder.build());
     emit player_attack_speed_write_operation("");
     emit debug_qstr("Player attack speed " + _operation + " not an operation");
 }
@@ -153,18 +158,13 @@ void aik_worker::process_target_speed_qstring(const QString& _operation) {
 void aik_worker::process_target_attack_speed_qstring(const QString& _operation) {
     //m_target_attack_speed_operation = aik_write_instructions(_operation.toStdString());
 }
-#include <aik/shared_mutex.hpp>
-#include <aik/shared_memory.hpp>
+
 void aik_worker::stop_client() {
     emit debug_qstr("Stopping client");
-    m_aik.write_shared_values(AIK_READ{.m_run = false}.contruct_dispatch(), 0);
-    if (m_aik.m_shared_mutex) {
-        m_aik.m_shared_mutex->~shared_mutex();
-    }
-    if (m_aik.m_shared_memory) {
-        m_aik.m_shared_memory->~shared_memory();
-    }
+}
 
+void aik_worker::map_driver() {
+    m_aik_process->map_driver();
 }
 
 void aik_worker::process_shared_mem_dbg_msg(const QString& dbg_msg) {
@@ -172,7 +172,7 @@ void aik_worker::process_shared_mem_dbg_msg(const QString& dbg_msg) {
         return;
     }
     // flush values
-    m_aik.write_shared_values(AIK_READ{}.contruct_dispatch());
+    //m_aik.write_shared_values(AIK_READ{}.contruct_dispatch());
     if (this->m_debug_message == dbg_msg) {
         return;
     }
@@ -189,10 +189,6 @@ void aik_worker::process_shared_mem_dbg_msg(const QString& dbg_msg) {
     return;
 }
 
-void aik_worker::dispatch_shared_values_to_write(const AIK_WRITE& _aik_write) {
-    m_aik.write_shared_values(_aik_write.contruct_dispatch());
-}
-
 namespace {
 float prev_target_speed = {};
 qint32 prev_target_attack_speed = {};
@@ -206,28 +202,29 @@ float prev_target_y = {};
 float prev_target_z = {};
 }
 
-void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
-    AIK_WRITE _aik_write{};
-    this->process_shared_mem_dbg_msg(QString::fromWCharArray(up_aik_read.dbg_wprint));
+void aik_worker::process_read_values(aik::client_values aik_client_values) {
+    aik::aion_write_builder aion_write_builder;
+    //AIK_WRITE _aik_write{};
+    //this->process_shared_mem_dbg_msg(QString::fromWCharArray(up_aik_read.dbg_wprint));
 
-    if (std::wcslen(up_aik_read.player_name) != 0) {
-        emit set_player_group_box_title(QString::fromStdWString(up_aik_read.player_name));
+    if (!aik_client_values.get_name().empty()) {
+        // TODO: change function to use QStringView
+        emit set_player_group_box_title(QString::fromStdString(std::string(aik_client_values.get_name())));
     }
 
-    emit set_gui_ents_enable(::lock_mod::lock_ents::PLAYER_MOD, up_aik_read.m_aion_player_found);
-    emit set_gui_ents_enable(::lock_mod::lock_ents::LOAD_DRIVER, !up_aik_read.m_aion_client_running);
-    emit set_gui_ents_enable(::lock_mod::lock_ents::CONSOLE_MOD, up_aik_read.m_aion_console_found);
+    emit set_gui_ents_enable(::lock_mod::lock_ents::PLAYER_MOD, m_aik_process->is_player_found());
+    emit set_gui_ents_enable(::lock_mod::lock_ents::LOAD_DRIVER, !m_aik_process->is_process_attached());
+    emit set_gui_ents_enable(::lock_mod::lock_ents::CONSOLE_MOD, m_aik_process->is_console_pattern_found());
 
-    _aik_write.no_gravity = m_no_gravity_button_state == Qt::Checked;
-    _aik_write.radar = m_radar_button_state == Qt::Checked;
-    _aik_write.disable_console = m_console_button_state != Qt::Checked;
-    //qDebug() << __FUNCTION__ << m_client_player_speed << " : " << up_aik_read.player_speed;
-    if (auto player_speed = up_aik_read.player_speed; player_speed != 0 && m_client_player_speed != player_speed) {
+    aion_write_builder.set_gravity(m_no_gravity_button_state != Qt::Checked);
+    aion_write_builder.set_radar(m_radar_button_state == Qt::Checked);
+    aion_write_builder.set_console(m_console_button_state == Qt::Checked);
+
+    if (auto player_speed = aik_client_values.get_speed(); player_speed != 0 && m_client_player_speed != player_speed) {
         if (m_player_speed_button_state != Qt::Checked) {
             m_unchanged_player_speed = player_speed;
         }
         if (m_player_speed_button_state == Qt::Checked && m_paik_process_values && m_paik_process_values->get_player_speed_operation()) {
-            //qDebug() << m_paik_process_values->get_player_speed_operation()->operation_qstring();
             auto _t_sp = player_speed;
             player_speed = m_paik_process_values->get_player_speed_operation()->apply(player_speed);
             emit debug_qstr("Player speed operation found. " +
@@ -237,18 +234,16 @@ void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
                                         "} " +
                                         "-> (float)" +
                                         QString::number(player_speed));
-            _aik_write.speed = player_speed;
+            aion_write_builder.set_speed(player_speed);
         } else {
-            _aik_write.speed = m_unchanged_player_speed;
-            //qDebug() << m_unchanged_player_speed << " unch:cur " << m_client_player_speed;
+            aion_write_builder.set_speed(m_unchanged_player_speed);
             emit debug_qstr("Received Player Speed: " + QString::number(player_speed));
         }
         m_client_player_speed = player_speed;
-        //qDebug() << __FUNCTION__ << " : "<< m_client_player_speed << " : " << player_speed;
 
         emit set_player_speed(player_speed);
     }
-    if (auto player_attack_speed = up_aik_read.player_attack_speed; player_attack_speed && m_client_player_attack_speed != player_attack_speed) {
+    if (auto player_attack_speed = aik_client_values.get_attack_speed(); player_attack_speed && m_client_player_attack_speed != player_attack_speed) {
         if (m_player_attack_speed_button_state != Qt::Checked) {
             m_unchanged_player_attack_speed = player_attack_speed;
         }
@@ -263,55 +258,55 @@ void aik_worker::process_read_values(const AIK_READ& up_aik_read) {
                                         "-> (int)" +
                                         QString::number(player_attack_speed));
 
-            _aik_write.attack_speed = player_attack_speed;
+            aion_write_builder.set_attack_speed(player_attack_speed);
         } else {
-            _aik_write.attack_speed = m_unchanged_player_attack_speed;
+            aion_write_builder.set_attack_speed(m_unchanged_player_attack_speed);
             emit debug_qstr("Received Player Attack Speed: " + QString::number(player_attack_speed));
         }
         m_client_player_attack_speed = player_attack_speed;
         emit set_player_attack_speed(player_attack_speed);
     }
-    if (prev_player_x != up_aik_read.player_x) {
-        prev_player_x = up_aik_read.player_x;
-        emit set_ui_player_x(up_aik_read.player_x);
-        emit debug_qstr("Received Player X: " + QString::number(up_aik_read.player_x));
+    if (prev_player_x != aik_client_values.get_pos_x()) {
+        prev_player_x = aik_client_values.get_pos_x();
+        emit set_ui_player_x(aik_client_values.get_pos_x());
+        emit debug_qstr("Received Player X: " + QString::number(aik_client_values.get_pos_x()));
     }
-    if (prev_player_y != up_aik_read.player_y) {
-        prev_player_y = up_aik_read.player_y;
-        emit set_ui_player_y(up_aik_read.player_y);
-        emit debug_qstr("Received Player Y: " + QString::number(up_aik_read.player_y));
+    if (prev_player_y != aik_client_values.get_pos_y()) {
+        prev_player_y = aik_client_values.get_pos_y();
+        emit set_ui_player_y(aik_client_values.get_pos_y());
+        emit debug_qstr("Received Player Y: " + QString::number(aik_client_values.get_pos_y()));
     }
-    if (prev_player_z != up_aik_read.player_z) {
-        prev_player_z = up_aik_read.player_z;
-        emit set_ui_player_z(up_aik_read.player_z);
-        emit debug_qstr("Received Player Z: " + QString::number(up_aik_read.player_z));
+    if (prev_player_z != aik_client_values.get_pos_z()) {
+        prev_player_z = aik_client_values.get_pos_z();
+        emit set_ui_player_z(aik_client_values.get_pos_z());
+        emit debug_qstr("Received Player Z: " + QString::number(aik_client_values.get_pos_z()));
     }
-    if (prev_target_speed != up_aik_read.target_speed) {
-        prev_target_speed = up_aik_read.target_speed;
-        emit set_target_speed(up_aik_read.target_speed);
-        emit debug_qstr("Received Target Speed: " + QString::number(up_aik_read.target_speed));
-    }
-    if (prev_target_attack_speed != up_aik_read.target_attack_speed) {
-        prev_target_attack_speed = up_aik_read.target_attack_speed;
-        emit set_target_attack_speed(up_aik_read.target_attack_speed);
-        emit debug_qstr("Received Target Attack Speed: " + QString::number(up_aik_read.target_attack_speed));
-    }
-    if (prev_target_x != up_aik_read.target_x) {
-        prev_target_x = up_aik_read.target_x;
-        emit set_target_x(up_aik_read.target_x);
-        emit debug_qstr("Received Target X: " + QString::number(up_aik_read.target_x));
-    }
-    if (prev_target_y != up_aik_read.target_y) {
-        prev_target_y = up_aik_read.target_y;
-        emit set_target_y(up_aik_read.target_y);
-        emit debug_qstr("Received Target Y: " + QString::number(up_aik_read.target_y));
-    }
-    if (prev_target_z != up_aik_read.target_z) {
-        prev_target_z = up_aik_read.target_z;
-        emit set_target_z(up_aik_read.target_z);
-        emit debug_qstr("Received Target Z: " + QString::number(up_aik_read.target_z));
-    }
-    m_aik.write_shared_values(_aik_write.contruct_dispatch());
+//    if (prev_target_speed != up_aik_read.target_speed) {
+//        prev_target_speed = up_aik_read.target_speed;
+//        emit set_target_speed(up_aik_read.target_speed);
+//        emit debug_qstr("Received Target Speed: " + QString::number(up_aik_read.target_speed));
+//    }
+//    if (prev_target_attack_speed != up_aik_read.target_attack_speed) {
+//        prev_target_attack_speed = up_aik_read.target_attack_speed;
+//        emit set_target_attack_speed(up_aik_read.target_attack_speed);
+//        emit debug_qstr("Received Target Attack Speed: " + QString::number(up_aik_read.target_attack_speed));
+//    }
+//    if (prev_target_x != up_aik_read.target_x) {
+//        prev_target_x = up_aik_read.target_x;
+//        emit set_target_x(up_aik_read.target_x);
+//        emit debug_qstr("Received Target X: " + QString::number(up_aik_read.target_x));
+//    }
+//    if (prev_target_y != up_aik_read.target_y) {
+//        prev_target_y = up_aik_read.target_y;
+//        emit set_target_y(up_aik_read.target_y);
+//        emit debug_qstr("Received Target Y: " + QString::number(up_aik_read.target_y));
+//    }
+//    if (prev_target_z != up_aik_read.target_z) {
+//        prev_target_z = up_aik_read.target_z;
+//        emit set_target_z(up_aik_read.target_z);
+//        emit debug_qstr("Received Target Z: " + QString::number(up_aik_read.target_z));
+//    }
+    m_aik_process->write_client_values(aion_write_builder.build());
 }
 void aik_worker::apply_existing_inst_and_write_player_speed() {
     if (!m_paik_process_values || !m_paik_process_values->get_player_speed_operation()) {
@@ -319,9 +314,11 @@ void aik_worker::apply_existing_inst_and_write_player_speed() {
     }
     const auto _new_speed = m_paik_process_values->get_player_speed_operation()->apply(m_client_player_speed);
     emit set_player_speed(_new_speed);
-    //qDebug() << __FUNCTION__ << ": " << m_client_player_speed << " : " << _new_speed;
     this->m_client_player_speed = _new_speed;
-    m_aik.write_shared_values(AIK_WRITE{.speed = _new_speed}.contruct_dispatch());
+
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_speed(_new_speed);
+    m_aik_process->write_client_values(aion_write_builder.build());
 }
 void aik_worker::apply_existing_inst_and_write_player_attack_speed() {
     if (!m_paik_process_values || !m_paik_process_values->get_player_attack_speed_operation()) {
@@ -330,5 +327,8 @@ void aik_worker::apply_existing_inst_and_write_player_attack_speed() {
     const auto _new_attack_speed = m_paik_process_values->get_player_attack_speed_operation()->apply(m_client_player_attack_speed);
     emit set_player_attack_speed(_new_attack_speed);
     this->m_client_player_attack_speed = _new_attack_speed;
-    m_aik.write_shared_values(AIK_WRITE{.attack_speed = _new_attack_speed}.contruct_dispatch());
+
+    aik::aion_write_builder aion_write_builder;
+    aion_write_builder.set_attack_speed(_new_attack_speed);
+    m_aik_process->write_client_values(aion_write_builder.build());
 }

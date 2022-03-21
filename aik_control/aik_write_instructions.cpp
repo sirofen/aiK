@@ -20,15 +20,11 @@ aik_write_instructions::aik_write_instructions(std::string _str_operation) {
     try {
         std::uint32_t tmp_int = std::stoul(_str_operation.c_str() + operand_offset, &_read_sz);
         if (_read_sz == _str_operation.length() - operand_offset) {
-            //_int_val = tmp_int;
-            //qDebug() << "intval" << tmp_int;
             m_operand = tmp_int;
             return;
         }
         float tmp_float = std::stof(_str_operation.c_str() + operand_offset, &_read_sz);
         if (_read_sz == _str_operation.length() - operand_offset) {
-            //_float_val = tmp_float;
-            //qDebug() << "floatval" << tmp_int;
             m_operand = tmp_float;
             return;
         }
